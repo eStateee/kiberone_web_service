@@ -1,4 +1,4 @@
-from django.db.models import QuerySet
+from django.db.models import QuerySet, Count
 from django.shortcuts import render
 import logging
 import os
@@ -21,7 +21,7 @@ from app_api.utils.util_erip import set_pay
 from app_api.utils.util_parse_date import parse_date
 from app_api.utils.user_status_utils import update_bot_user_status
 from app_api.tasks.check_clients_balance_and_notify import send_telegram_document
-from app_kiberclub.models import AppUser, Client, Branch, ClientBonus, EripPaymentHelp, Location, PartnerCategory, PartnerClientBonus, QuestionsAnswers, SalesManager, SocialLink
+from app_kiberclub.models import AppUser, Client, Branch, ClientBonus, EripPaymentHelp, Location, PartnerCategory, PartnerClientBonus, QuestionsAnswers, SalesManager, SocialLink, PartnerCity
 
 logger = logging.getLogger(__name__)
 
@@ -431,6 +431,67 @@ def get_partner_categories_view(request) -> Response:
         logger.error(f"Ошибка при получении категорий: {str(e)}")
         return Response(
             {"success": False, "message": "Ошибка сервера при получении категорий."},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+        )
+
+
+@api_view(["GET"])
+def get_partner_cities_view(request) -> Response:
+    """
+    Получение списка активных городов партнеров, в которых есть хотя бы один партнер.
+    """
+    try:
+        cities = PartnerCity.objects.filter(is_active=True).annotate(
+            partner_count=Count('partners')
+        ).filter(partner_count__gt=0)
+
+        data = [
+            {
+                "id": city.id,
+                "name": city.name,
+            }
+            for city in cities
+        ]
+        return Response(
+            {"success": True, "data": data},
+            status=status.HTTP_200_OK,
+        )
+    except Exception as e:
+        logger.error(f"Ошибка при получении городов: {str(e)}")
+        return Response(
+            {"success": False, "message": "Ошибка сервера при получении городов."},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+        )
+
+
+@api_view(["GET"])
+def get_partners_filtered_view(request, city_id: int, category_id: int) -> Response:
+    """
+    Получение списка партнеров по городу и категории.
+    """
+    try:
+        partners = PartnerClientBonus.objects.filter(
+            category_id=category_id,
+            cities__id=city_id
+        ).distinct()
+        
+        data = [
+            {
+                "id": partner.id,
+                "partner_name": partner.partner_name,
+                "description": partner.description,
+                "code": partner.code,
+            }
+            for partner in partners
+        ]
+        return Response(
+            {"success": True, "data": data},
+            status=status.HTTP_200_OK,
+        )
+    except Exception as e:
+        logger.error(f"Ошибка при получении партнеров (filtered): {str(e)}")
+        return Response(
+            {"success": False, "message": "Ошибка сервера при получении партнеров."},
             status=status.HTTP_500_INTERNAL_SERVER_ERROR,
         )
 

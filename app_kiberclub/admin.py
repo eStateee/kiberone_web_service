@@ -20,7 +20,7 @@ from app_kiberclub.models import (
     SalesManager,
     SocialLink,
     Location,
-    Manager, BroadcastMessage, RunningLine,
+    Manager, BroadcastMessage, RunningLine, PartnerCity,
 )
 
 logger = logging.getLogger(__name__)
@@ -107,6 +107,13 @@ class EripPaymentHelpAdmin(admin.ModelAdmin):
     search_fields = ["erip_link", "erip_instructions"]
 
 
+@admin.register(PartnerCity)
+class PartnerCityAdmin(admin.ModelAdmin):
+    list_display = ["name", "is_active"]
+    list_editable = ["is_active"]
+    search_fields = ["name"]
+
+
 @admin.register(PartnerCategory)
 class PartnerCategoryAdmin(admin.ModelAdmin):
     """
@@ -122,6 +129,7 @@ class PartnerClientBonusAdmin(admin.ModelAdmin):
     """
 
     list_display = ["partner_name", "category"]
+    filter_horizontal = ('cities',)
     search_fields = ["partner_name"]
 
 

@@ -19,7 +19,10 @@ from app_api.views import (
     get_partners_by_category_view,
     get_partner_by_id_view, get_manager, get_user_balances, get_client_payment_data, get_user_tg_links,
     find_client_by_id_view,
+    find_client_by_id_view,
     telegram_callback_handler,
+    get_partner_cities_view,
+    get_partners_filtered_view,
 )
 
 app_name = "app_crm_api"
@@ -35,6 +38,8 @@ urlpatterns = [
     path("get_erip_payment_help/", get_erip_payment_help, name="get_erip_payment_help",),
     path("get_partner_categories/", get_partner_categories_view, name="get_partner_categories",),
     path("get_partners_by_category/<int:category_id>/", get_partners_by_category_view, name="get_partners_by_category",),
+    path("get_partners_filtered/<int:city_id>/<int:category_id>/", get_partners_filtered_view, name="get_partners_filtered",),
+    path("get_partner_cities/", get_partner_cities_view, name="get_partner_cities",),
     path("get_partner_by_id/<int:partner_id>/", get_partner_by_id_view, name="get_partner_by_id",),
     path("get_client_bonuses/", get_client_bonuses, name="get_client_bonuses"),
     path("get_bonus_by_id/<int:bonus_id>/", get_bonus_by_id_view, name="get_bonus_by_id",),

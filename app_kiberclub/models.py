@@ -206,6 +206,19 @@ class EripPaymentHelp(models.Model):
         verbose_name_plural = "Помощь в оплате ЕРИП"
 
 
+class PartnerCity(models.Model):
+    name = models.CharField(max_length=255, verbose_name="Название")
+    is_active = models.BooleanField(default=True, verbose_name="Активен")
+
+    class Meta:
+        db_table = "partner_city"
+        verbose_name = "Город партнера"
+        verbose_name_plural = "Города партнеров"
+
+    def __str__(self):
+        return self.name
+
+
 class PartnerCategory(models.Model):
     name = models.CharField(max_length=255, verbose_name="Название")
 
@@ -220,6 +233,7 @@ class PartnerCategory(models.Model):
 
 class PartnerClientBonus(models.Model):
     category = models.ForeignKey(PartnerCategory, on_delete=models.CASCADE, verbose_name="Категория")
+    cities = models.ManyToManyField(PartnerCity, verbose_name="Города", related_name="partners")
     partner_name = models.CharField(max_length=155, verbose_name="Название партнера")
     description = models.CharField(verbose_name="Описание", null=True, blank=True)
     code = models.CharField(max_length=155, verbose_name="Промо-код", null=True, blank=True)
