@@ -480,6 +480,7 @@ def get_partners_filtered_view(request, city_id: int, category_id: int) -> Respo
                 "id": partner.id,
                 "partner_name": partner.partner_name,
                 "description": partner.description,
+                "terms_of_usage": partner.terms_of_usage,
                 "code": partner.code,
             }
             for partner in partners
@@ -542,6 +543,7 @@ def get_partner_by_id_view(request, partner_id: int) -> Response:
             "id": partner.id,
             "partner_name": partner.partner_name,
             "description": partner.description,
+            "terms_of_usage": partner.terms_of_usage,
             "code": partner.code,
             "category": partner.category.id,
             "image": partner.image.url if partner.image else None,

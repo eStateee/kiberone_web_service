@@ -236,6 +236,7 @@ class PartnerClientBonus(models.Model):
     cities = models.ManyToManyField(PartnerCity, verbose_name="Города", related_name="partners")
     partner_name = models.CharField(max_length=155, verbose_name="Название партнера")
     description = models.CharField(verbose_name="Описание", null=True, blank=True)
+    terms_of_usage = models.CharField(verbose_name="Условия использования", null=True, blank=True)
     code = models.CharField(max_length=155, verbose_name="Промо-код", null=True, blank=True)
     image = models.ImageField(upload_to="partner_bonuses/", blank=True, null=True, verbose_name="Изображение")
 
