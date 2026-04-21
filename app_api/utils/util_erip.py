@@ -74,18 +74,19 @@ def get_curr_month_lessons(user_data, curr_date):
     plan_lessons = plan_lessons.get("items", [])
 
     for lesson in taught_lessons:
-        reason_id = lesson.get("details")[0].get("reason_id")
+        #reason_id = lesson.get("details")[0].get("reason_id")
+        reason_id = [details.get("reason_id") for details in lesson.get("details")
+                     if details["customer_id"] == user_data["id"]][0]
         lesson_date = datetime.strptime(lesson.get("date"), '%Y-%m-%d')
         if lesson_date.month == curr_date.month and lesson_date.year == curr_date.year and reason_id != 1:
             taught_lesson_dates.append({"date": lesson.get("date"), "reason": reason_id})
 
     for lesson in plan_lessons:
-        details = lesson.get("details", [])
-        if details:
-            reason_id = details[0].get("reason_id")
-            lesson_date = datetime.strptime(lesson.get("date"), '%Y-%m-%d')
-            if lesson_date.month == curr_date.month and lesson_date.year == curr_date.year and reason_id != 1:
-                plan_lesson_dates.append({"date": lesson_date, "reason": reason_id})
+        reason_id = [details.get("reason_id") for details in lesson.get("details")
+                     if details["customer_id"] == user_data["id"]][0]
+        lesson_date = datetime.strptime(lesson.get("date"), '%Y-%m-%d')
+        if lesson_date.month == curr_date.month and lesson_date.year == curr_date.year and reason_id != 1:
+            plan_lesson_dates.append({"date": lesson_date, "reason": reason_id})
 
     return taught_lesson_dates, plan_lesson_dates
 
