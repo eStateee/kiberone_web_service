@@ -17,11 +17,11 @@ TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN_TEST") if DEBUG else os.geten
 # HOSTS & DOMAINS
 # ======================
 FRONTEND_DEV_URL = "http://localhost:3000"
-FRONTEND_PROD_URL = "https://kiberonetgbot.online"
+FRONTEND_PROD_URL = "https://klik-telegrambot.of.by"
 
 ALLOWED_HOSTS = [
-    "kiberonetgbot.online",
-    "www.kiberonetgbot.online",
+    "klik-telegrambot.of.by",
+    "www.klik-telegrambot.of.by",
     "93.85.88.72",
     "localhost",
     "127.0.0.1",
@@ -73,7 +73,7 @@ if DEBUG:
 else:
     # В продакшене — разрешаем и продакшен-фронтенд, и localhost для разработки
     CORS_ALLOWED_ORIGINS = [
-        "https://kiberonetgbot.online",
+        "https://klik-telegrambot.of.by",
         "http://localhost:3000",
         "http://127.0.0.1:3000",
         "http://localhost:8000",
@@ -89,7 +89,7 @@ else:
 # CSRF
 # ======================
 CSRF_TRUSTED_ORIGINS = [
-    "https://kiberonetgbot.online",
+    "https://klik-telegrambot.of.by",
     "http://localhost:8000",
     "http://127.0.0.1:8000",
     "http://0.0.0.0:8000",
