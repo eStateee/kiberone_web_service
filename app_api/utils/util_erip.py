@@ -76,16 +76,25 @@ def get_curr_month_lessons(user_data, curr_date):
     for lesson in taught_lessons:
         #reason_id = lesson.get("details")[0].get("reason_id")
         logger.info(f'LESSONS GET: {lesson.get("details")}')
-        print('LESSON GET: ',lesson.get("details"))
-        reason_id = [details.get("reason_id") for details in lesson.get("details")
-                     if details["customer_id"] == user_data["crm_id"]][0]
+        details_list = lesson.get("details") or []
+        crm_id = int(user_data["crm_id"])
+        matched = [d.get("reason_id") for d in details_list if int(d.get("customer_id", 0)) == crm_id]
+        if not matched:
+            logger.warning(f'Не найден customer_id={crm_id} в details урока {lesson.get("id")}, details: {details_list}')
+            continue
+        reason_id = matched[0]
         lesson_date = datetime.strptime(lesson.get("date"), '%Y-%m-%d')
         if lesson_date.month == curr_date.month and lesson_date.year == curr_date.year and reason_id != 1:
             taught_lesson_dates.append({"date": lesson.get("date"), "reason": reason_id})
 
     for lesson in plan_lessons:
-        reason_id = [details.get("reason_id") for details in lesson.get("details")
-                     if details["customer_id"] == user_data["crm_id"]][0]
+        details_list = lesson.get("details") or []
+        crm_id = int(user_data["crm_id"])
+        matched = [d.get("reason_id") for d in details_list if int(d.get("customer_id", 0)) == crm_id]
+        if not matched:
+            logger.warning(f'Не найден customer_id={crm_id} в details планового урока {lesson.get("id")}, details: {details_list}')
+            continue
+        reason_id = matched[0]
         lesson_date = datetime.strptime(lesson.get("date"), '%Y-%m-%d')
         if lesson_date.month == curr_date.month and lesson_date.year == curr_date.year and reason_id != 1:
             plan_lesson_dates.append({"date": lesson_date, "reason": reason_id})
