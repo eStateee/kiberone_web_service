@@ -75,6 +75,8 @@ def get_curr_month_lessons(user_data, curr_date):
 
     for lesson in taught_lessons:
         #reason_id = lesson.get("details")[0].get("reason_id")
+        logger.info(f'LESSONS GET: {lesson.get("details")}')
+        print('LESSON GET: ',lesson.get("details"))
         reason_id = [details.get("reason_id") for details in lesson.get("details")
                      if details["customer_id"] == user_data["crm_id"]][0]
         lesson_date = datetime.strptime(lesson.get("date"), '%Y-%m-%d')
