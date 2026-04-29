@@ -98,9 +98,9 @@ def send_birthday_congratulations():
 
         message = (
             f"🎂 Поздравляем с Днем Рождения, {client.name}! 🎉\n\n"
-            f"Команда KIBERone желает тебе успехов в учебе, новых открытий и достижений!\n\n"
+            f"Команда KLiK желает тебе успехов в учебе, новых открытий и достижений!\n\n"
             f"Пусть этот день будет наполнен радостью и счастьем!\n\n"
-            f"Твой KIBERone! ❤️"
+            f"Твой KLiK! ❤️"
         )
 
         try:
@@ -143,16 +143,16 @@ def check_clients_balance_and_notify():
             # если урок сегодня, то отправить уведомление
             if timezone.now().strftime("%Y-%m-%d") == next_lesson_date:
                 message = (
-                    f"🔔 Это PUSH уведомление о необходимости пополнить KIBERказну\n\n"
-                    "Чтобы оплатить обучение KIBERone, нажмите на боковую кнопку Меню->КИБЕРменю->Оплатить\n\n"
-                    "Ваш KIBERone!\n"
+                    f"🔔 Это PUSH уведомление о необходимости пополнить KLiKказну\n\n"
+                    "Чтобы оплатить обучение KLiK, нажмите на боковую кнопку Меню->KLiKменю->Оплатить\n\n"
+                    "Ваш KLiK!\n"
                 )
 
                 reminder_message = (
                     "Уважаемый клиент!\n"
                     "У нас не отобразилась ваша оплата за занятия.\n"
-                    "Чтобы оплатить обучение KIBERone, нажмите на боковую кнопку Меню->КИБЕРменю->Оплатить\n\n"
-                    "Ваш KIBERone!\n"
+                    "Чтобы оплатить обучение KLiK, нажмите на боковую кнопку Меню->KLiKменю->Оплатить\n\n"
+                    "Ваш KLiK!\n"
                 )
 
                 # Выбираем сообщение в зависимости от текущей даты
@@ -198,7 +198,7 @@ def check_clients_lessons_before():
                     f"Дата: {lesson_date.split('-')[2]}.{lesson_date.split('-')[1]}\n"
                     f"Время: {lesson_time}\n"
                     f"Адрес: {location.name}\n{location.map_url}\n\n"
-                    "Ваш KIBERone ♥"
+                    "Ваш KLiK ♥"
                 )
                 try:
                     send_telegram_message(client.user.telegram_id, message)
@@ -241,7 +241,7 @@ def check_clients_lessons_before():
                         f"Дата: {next_lesson_date.split('-')[2]}.{next_lesson_date.split('-')[1]}\n"
                         f"Время: {last_user_lesson.get('time_from').split(' ')[1][:-3]}\n"
                         f"Адрес: {location.name}\n{location.map_url}\n\n"
-                        "Ваш KIBERone ♥"
+                        "Ваш KLiK ♥"
                     )
 
                     try:
@@ -294,9 +294,9 @@ def check_client_passed_trial_lessons():
                 if attended:
                     if user.telegram_id:
                         message = (
-                            "Вчера вы были на пробном занятии в KIBERone 🚀\n"
+                            "Вчера вы были на пробном занятии в KLiK 🚀\n"
                             "А сегодня ловите ловите гайд по анимации в ROBLOX — оживите персонажей и попробуйте себя в роли разработчика 🔥\n\n"
-                            "До встречи на занятиях в KIBERone! 🚀"
+                            "До встречи на занятиях в KLiK! 🚀"
                         )
 
                         # Создаем инлайн клавиатуру с кнопкой-ссылкой "Получить подарок"
