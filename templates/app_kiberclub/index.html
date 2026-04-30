@@ -1,51 +1,53 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ title }}</title>
-    <link href="https://fonts.googleapis.com/css2?family=Franklin+Gothic+Medium&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=PF+Beau+Sans+Pro:wght@300&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'styles/start_page_style.css' %}">
-    <link rel="stylesheet" href="{% static 'styles/spinner_style.css' %}">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ title }}</title>
+  <link href="https://fonts.googleapis.com/css2?family=Franklin+Gothic+Medium&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=PF+Beau+Sans+Pro:wght@300&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'styles/start_page_style.css' %}">
+  <link rel="stylesheet" href="{% static 'styles/spinner_style.css' %}">
 </head>
 
 <body>
-<div id="mainDiv">
+  <div id="mainDiv">
     <section id="main">
-        <h1>Добро пожаловать <br> в KIBERhub!</h1>
-        <img src="{% static 'img/start.png' %}" id="startImg" alt="Старт">
-        <form action="{% url 'app_kiberclub:open_profile' %}" method="post" id="profileForm">
-            {% csrf_token %}
-            {% if profiles %}
-                <label for="profiles">В KIBERone учится...</label>
-                <select id="profiles" name="client_id">
-                    {% for client in profiles %}
-                        <option value="{{ client.crm_id }}">{{ client.name }}</option>
-                    {% endfor %}
-                </select>
-                <button type="submit" id="open" onclick="changeButtonText()">Перейти в KIBERhub</button>
-            {% else %}
-                <p class="no-profiles">Как бы мы не старались, но не нашли ни одного профиля.</p>
-            {% endif %}
-        </form>
+      <h1>Добро пожаловать <br> в !</h1>
+      <img src="{% static 'img/start.png' %}" id="startImg" alt="Старт">
+      <form action="{% url 'app_kiberclub:open_profile' %}" method="post" id="profileForm">
+        {% csrf_token %}
+        {% if profiles %}
+        <label for="profiles">В KLiK учится...</label>
+        <select id="profiles" name="client_id">
+          {% for client in profiles %}
+          <option value="{{ client.crm_id }}">{{ client.name }}</option>
+          {% endfor %}
+        </select>
+        <button type="submit" id="open" onclick="changeButtonText()">Перейти в KLiKhub</button>
+        {% else %}
+        <p class="no-profiles">Как бы мы не старались, но не нашли ни одного профиля.</p>
+        {% endif %}
+      </form>
 
-        <p id="text">
-            KIBERhub — это личный кабинет Вашего ребенка, в котором вы сможете посмотреть количество
-            заработанных киберонов, перейти в кабинет по предзаказу товаров к предстоящему КиберШопу, узнать тему
-            занятий и получить обратную связь от тьютора.
-        </p>
+      <p id="text">
+        KLiKhub — это личный кабинет Вашего ребенка, в котором вы сможете посмотреть количество
+        заработанных кликоинов, перейти в кабинет по предзаказу товаров к предстоящему КликМаркету, узнать тему
+        занятий и получить обратную связь от тьютора.
+      </p>
     </section>
-</div>
+  </div>
 </body>
 <script>
-    function changeButtonText() {
-        const button = document.getElementById("open");
-        button.innerText = "Загрузка данных...";
-        button.disabled = true;
-        let formElement = document.getElementById("profileForm");
-        formElement.submit();
-    }
+  function changeButtonText() {
+    const button = document.getElementById("open");
+    button.innerText = "Загрузка данных...";
+    button.disabled = true;
+    let formElement = document.getElementById("profileForm");
+    formElement.submit();
+  }
 </script>
+
 </html>

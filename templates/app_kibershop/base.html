@@ -1,57 +1,57 @@
 {% load static %}
 <!DOCTYPE html>
 <html>
-<head>
-    <title>Корзина</title>
-    {#    <!-- <link rel="stylesheet" type="text/css" href="{% static 'styles/kibershop_styles/kibershop.css' %}"> -->#}
 
-    <link rel="stylesheet" type="text/css" href="{% static 'styles/kibershop_styles/header_style.css' %}">
-    <link rel="stylesheet" type="text/css" href="{% static 'styles/kibershop_styles/footer_style.css' %}">
-    <link rel="stylesheet" type="text/css" href="{% static 'styles/kibershop_styles/fixed_cart_button_style.css' %}">
-    <link rel="stylesheet" type="text/css" href="{% static 'styles/kibershop_styles/running_line.css' %}">
-    <meta name="viewport" content="width=device-width">
-    {% block head %}
-    {% endblock %}
+<head>
+  <title>Корзина</title>
+  {# <!-- <link rel="stylesheet" type="text/css" href="{% static 'styles/kibershop_styles/kibershop.css' %}"> -->#}
+
+  <link rel="stylesheet" type="text/css" href="{% static 'styles/kibershop_styles/header_style.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'styles/kibershop_styles/footer_style.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'styles/kibershop_styles/fixed_cart_button_style.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'styles/kibershop_styles/running_line.css' %}">
+  <meta name="viewport" content="width=device-width">
+  {% block head %}
+  {% endblock %}
 </head>
 
 <header style="background-image: url({% static 'img/kibershop/waves.svg' %})">
 
-    <section id="headerLine">
-        <a href="{% url 'app_kibershop:catalog' %}"><img src="{% static 'img/kibershop/logo.jpg' %}" id="logoImg"></a>
-        <a href="{% url 'app_kibershop:catalog' %}" id="toCatalog">Каталог</a>
-        <!-- <button><img src="insta logo.svg" class="iconImg"></button>
+  <section id="headerLine">
+    <a href="{% url 'app_kibershop:catalog' %}"><img src="{% static 'img/kibershop/logo.jpg' %}" id="logoImg"></a>
+    <a href="{% url 'app_kibershop:catalog' %}" id="toCatalog">Каталог</a>
+    <!-- <button><img src="insta logo.svg" class="iconImg"></button>
         <button><img src="tt logo.svg" class="iconImg"></button> -->
-        <a href="{% url 'app_kibershop:cart' %}"><img src="{% static 'img/kibershop/cart_logo.png' %}"
-                                                      class="iconImg"></a>
-        <section id="headerButtons">
-            <a href="{% url 'app_kibershop:profile_page' %}"><img src="{% static 'img/kibershop/icon_profile.svg' %}"
-                                                                  id="profileImg" class="iconImg"></a>
-            <a href="{% url 'app_kiberclub:index' %}" id="logOut">Назад</a>
-        </section>
+    <a href="{% url 'app_kibershop:cart' %}"><img src="{% static 'img/kibershop/cart_logo.png' %}" class="iconImg"></a>
+    <section id="headerButtons">
+      <a href="{% url 'app_kibershop:profile_page' %}"><img src="{% static 'img/kibershop/icon_profile.svg' %}"
+          id="profileImg" class="iconImg"></a>
+      <a href="{% url 'app_kiberclub:index' %}" id="logOut">Назад</a>
     </section>
+  </section>
 
 
-{#    <section id="headerLine">#}
-{#        <div class="left_section">#}
-{#            <a href="{% url 'app_kibershop:catalog' %}">#}
-{#                <img src="{% static 'img/kibershop/logo.jpg' %}" id="logoImg">#}
-{#            </a>#}
-{#            <a href="{% url 'app_kibershop:catalog' %}" id="toCatalog">Каталог</a>#}
-{##}
-{#        </div>#}
-{##}
-{#        <div class="right_section">#}
-{#            <a href="{% url 'app_kibershop:cart' %}"><img src="{% static 'img/kibershop/cart_logo.svg' %}"#}
-{#                                                          class="iconImg"></a>#}
-{#            <p style="color: white;">{{ kiberons }} K</p>#}
-{#            <a href="{% url 'app_kibershop:profile_page' %}">#}
-{#                <img src="{% static 'img/kibershop/icon_profile.svg' %}" id="profileImg" class="iconImg">#}
-{#            </a>#}
-{#        </div>#}
-{##}
-{#    </section>#}
-    {% block header %}
-    {% endblock %}
+  {# <section id="headerLine">#}
+    {# <div class="left_section">#}
+      {# <a href="{% url 'app_kibershop:catalog' %}">#}
+        {# <img src="{% static 'img/kibershop/logo.jpg' %}" id="logoImg">#}
+        {# </a>#}
+      {# <a href="{% url 'app_kibershop:catalog' %}" id="toCatalog">Каталог</a>#}
+      {##}
+      {# </div>#}
+    {##}
+    {# <div class="right_section">#}
+      {# <a href="{% url 'app_kibershop:cart' %}"><img src="{% static 'img/kibershop/cart_logo.svg' %}" #} {#
+          class="iconImg"></a>#}
+      {# <p style="color: white;">{{ kiberons }} K</p>#}
+      {# <a href="{% url 'app_kibershop:profile_page' %}">#}
+        {# <img src="{% static 'img/kibershop/icon_profile.svg' %}" id="profileImg" class="iconImg">#}
+        {# </a>#}
+      {# </div>#}
+    {##}
+    {# </section>#}
+  {% block header %}
+  {% endblock %}
 </header>
 
 {% block content %}
@@ -60,12 +60,13 @@
 
 
 <footer style="background-image: url({% static 'img/kibershop/waves_footer.svg' %})">
-    <section id="companyInfo">
-        <i>OOO «КИБЕРуан БЕЛ» РБ,</i>
-        <i>УНП 193397920</i>
-    </section>
-    <img src="{% static 'img/kibershop/logo.jpg' %}" id="logoImg" alt="logo">
-    {% block footer %}
-    {% endblock %}
+  <section id="companyInfo">
+    <i>OOO «ТАЙМКЛИК»</i>
+    <i>УНП 193397920</i>
+  </section>
+  <img src="{% static 'img/kibershop/logo.jpg' %}" id="logoImg" alt="logo">
+  {% block footer %}
+  {% endblock %}
 </footer>
+
 </html>

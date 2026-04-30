@@ -117,7 +117,7 @@ def make_order(request):
         try:
             user_kiberons_count = get_client_kiberons(user_in_db.branch.id, client_id)
             if not user_kiberons_count:
-                messages.error(request, "Нам не удалось получить количество ваших киберонов.", extra_tags="danger")
+                messages.error(request, "Нам не удалось получить количество ваших кликоинов.", extra_tags="danger")
                 return redirect(request.META.get("HTTP_REFERER"))
         except Exception as e:
             messages.error(request, f"Ошибка при получении заказов пользователя", extra_tags="danger")
@@ -134,7 +134,7 @@ def make_order(request):
             return redirect(request.META.get("HTTP_REFERER"))
 
         if user_kiberons_count < total_sum:
-            messages.error(request, "Недостаточно киберонов", extra_tags="danger")
+            messages.error(request, "Недостаточно кликоинов", extra_tags="danger")
             return redirect(request.META.get("HTTP_REFERER"))
 
         # создание заказа
@@ -165,10 +165,10 @@ def make_order(request):
             remaining_quantity = total_sum
             spent_response = spent_client_kiberons(user_in_db.branch.id, client_id, remaining_quantity, note="KIBERSHOP")
             if not spent_response:
-                message.error(request, "Ошибка при списании киберонов", extra_tags="danger")
+                message.error(request, "Ошибка при списании кликоинов", extra_tags="danger")
                 return redirect(request.META.get("HTTP_REFERER"))
         except Exception as e:
-            messages.error(request, "Ошибка при списании киберонов", extra_tags="danger")
+            messages.error(request, "Ошибка при списании кликоинов", extra_tags="danger")
             return redirect(request.META.get("HTTP_REFERER"))
 
         # сохранение в таблице

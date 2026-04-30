@@ -1,7 +1,7 @@
 @font-face {
     font-family: 'pf_beausans_prolight';
-    src: url('/static/fonts/PFBeauSansPro-Light.ttf');
-url('/static/fonts/PFBeauSansPro-Light.ttf') format('truetype');
+    src: url('/static/fonts/Etude Noire Light.ttf');
+url('/static/fonts/Etude Noire Light.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
 }
@@ -9,8 +9,8 @@ url('/static/fonts/PFBeauSansPro-Light.ttf') format('truetype');
 
 @font-face {
     font-family: 'franklin_gothic_mediumregular';
-    src: url('/static/fonts/Franklin_Gothic_Medium.ttf');
-url('/static/fonts/Franklin_Gothic_Medium.ttf') format('truetype');
+    src: url('/static/fonts/manrope-medium.otf');
+url('/static/fonts/manrope-medium.otf') format('truetype');
     font-weight: normal;
     font-style: normal;
 }
@@ -28,7 +28,7 @@ html {
 
 body {
     font-family: 'pf_beausans_prolight';
-    background: #fff;
+    background: #FBFFDC;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -48,7 +48,7 @@ body {
 }
 
 #back {
-    background-color: #06B9BE;
+    background-color: #5D2435;
     /*padding-left: 3vw;*/
     /*padding-right: 3vw;*/
     padding-top: 0.3vh;
@@ -58,7 +58,7 @@ body {
 
 
 span {
-    background-color: #fff;
+    background-color: #FBFFDC;
     padding: 3vw;
     border-radius: 2vw;
     display: flex;
@@ -66,7 +66,7 @@ span {
     font-size: 4vw;
     overflow: auto;
     scroll-snap-type: y mandatory;
-    border: 0.5vw solid #F6C90E;
+    border: 0.5vw solid #EE6C4D;
 }
 
 p {
@@ -75,7 +75,7 @@ p {
 }
 
 a {
-    background-color: #F6C90E;
+    background-color: #EE6C4D;
     color: #ffffff;
     border-radius: 5vw;
     padding: 1.0vh;

@@ -2,127 +2,129 @@
 
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Профиль пользователя на сайте">
-    <meta name="keywords" content="профиль пользователя, сайт, пользовательский профиль">
-    <title>Профиль</title>
-    <link href="https://fonts.googleapis.com/css2?family=Franklin+Gothic+Medium&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=PF+Beau+Sans+Pro:wght@300&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'styles/client_card_style.css' %}">
-    <link rel="stylesheet" href="{% static 'styles/kibershop_styles/running_line.css' %}">
-    <link rel="stylesheet" href="{% static 'styles/feed_back_form_style.css' %}">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Профиль пользователя на сайте">
+  <meta name="keywords" content="профиль пользователя, сайт, пользовательский профиль">
+  <title>Профиль</title>
+  <link href="https://fonts.googleapis.com/css2?family=Franklin+Gothic+Medium&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=PF+Beau+Sans+Pro:wght@300&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'styles/client_card_style.css' %}">
+  <link rel="stylesheet" href="{% static 'styles/kibershop_styles/running_line.css' %}">
+  <link rel="stylesheet" href="{% static 'styles/feed_back_form_style.css' %}">
 </head>
 
 <body>
 
-<div id="mainDiv">
+  <div id="mainDiv">
     <div id="main">
-        <div id="backContainer">
-            <a href="{% url 'app_kiberclub:index' %}" id="back">←</a>
-        </div>
-        <section id="infoWithImage">
-            <img src="{% static 'img/profile_image.png' %}" alt="Профиль пользователя" id="profileImg">
-            <section id="userInfo">
-                <section id="account">
-                    <img src="{% static 'img/wallet_img.png' %}" alt="Кошелек" id="walletImg">
-                    <b id="kiberons">{{ client.kiberons_count }} К</b>
-                </section>
-                <p id="fullname">{{ client.name }}</p>
-                <b id="dob">{{ client.dob }}</b>
-                <b id="location">{{ client.location_name }}</b>
-            </section>
+      <div id="backContainer">
+        <a href="{% url 'app_kiberclub:index' %}" id="back">←</a>
+      </div>
+      <section id="infoWithImage">
+        <img src="{% static 'img/profile_image.png' %}" alt="Профиль пользователя" id="profileImg">
+        <section id="userInfo">
+          <section id="account">
+            <img src="{% static 'img/wallet_img.png' %}" alt="Кошелек" id="walletImg">
+            <b id="kiberons">{{ client.kiberons_count }} К</b>
+          </section>
+          <p id="fullname">{{ client.name }}</p>
+          <b id="dob">{{ client.dob }}</b>
+          <b id="location">{{ client.location_name }}</b>
         </section>
+      </section>
 
-        <section id="buttons">
-            <a href="{% url 'app_kibershop:catalog' %}" id="shopLink">KIBERshop</a>
-            <a href="{{ portfolio_link }}" id="portfolioLink" target="_blank">Портфолио</a>
-        </section>
+      <section id="buttons">
+        <!-- <a href="{% url 'app_kibershop:catalog' %}" id="shopLink">KIBERshop</a> -->
+        <a href="{{ portfolio_link }}" id="portfolioLink" target="_blank">Портфолио</a>
+      </section>
 
-        {% if running_line_text %}
-        <div id="warning">
-            <p class="warningText">
-                {{ running_line_text }}
-            </p>
-        </div>
-        {% endif %}
+      {% if running_line_text %}
+      <div id="warning">
+        <p class="warningText">
+          {{ running_line_text }}
+        </p>
+      </div>
+      {% endif %}
 
-        <section id="extraInfo">
-            <p>Тема следующего занятия:</p>
-            <span id="subject">{{ client.lesson_name }}</span>
-            <p>Обратная связь от тьютора:</p>
-            <span id="resume">
-                <div class="item" id="resumeInfo">{{ client.resume }}</div>
-            </span>
-        </section>
+      <section id="extraInfo">
+        <p>Тема следующего занятия:</p>
+        <span id="subject">{{ client.lesson_name }}</span>
+        <p>Обратная связь от тьютора:</p>
+        <span id="resume">
+          <div class="item" id="resumeInfo">{{ client.resume }}</div>
+        </span>
+      </section>
 
-        <section id="feedback">
-            <p id="message">Оставьте обратную связь по работе нашей КИБЕР-школы!</p>
-            <form method="post" id="feedbackForm" onsubmit="event.preventDefault(); submitReview()">
-                {% csrf_token %}
-                <input type="hidden" name="crm_id" value="{{ client.crm_id }}">
-                <input type="hidden" name="room_id" value="{{ client.room_id }}">
-                <input type="hidden" name="profile_id" value="{{ client.profile_id }}">
+      <section id="feedback">
+        <p id="message">Оставьте обратную связь по работе нашей KLiK-школы!</p>
+        <form method="post" id="feedbackForm" onsubmit="event.preventDefault(); submitReview()">
+          {% csrf_token %}
+          <input type="hidden" name="crm_id" value="{{ client.crm_id }}">
+          <input type="hidden" name="room_id" value="{{ client.room_id }}">
+          <input type="hidden" name="profile_id" value="{{ client.profile_id }}">
 
-                <textarea placeholder="Введите ваш отзыв" id="feedbackInput" name="feedbackInput"></textarea>
-                <div id="forSendButton">
-                    <button type="submit" id="sendButton">Отправить</button>
-                </div>
+          <textarea placeholder="Введите ваш отзыв" id="feedbackInput" name="feedbackInput"></textarea>
+          <div id="forSendButton">
+            <button type="submit" id="sendButton">Отправить</button>
+          </div>
 
-            </form>
-        </section>
+        </form>
+      </section>
     </div>
-</div>
+  </div>
 </body>
 
 
 <script>
-    function submitReview() {
-        let formData = new FormData(document.getElementById('feedbackForm'));
-        let button = document.getElementById('sendButton');
-        let messageElement = document.getElementById('message');
+  function submitReview() {
+    let formData = new FormData(document.getElementById('feedbackForm'));
+    let button = document.getElementById('sendButton');
+    let messageElement = document.getElementById('message');
 
-        // Блокируем кнопку и меняем текст во время отправки
-        button.disabled = true;
-        button.innerText = 'Отправка...';
+    // Блокируем кнопку и меняем текст во время отправки
+    button.disabled = true;
+    button.innerText = 'Отправка...';
 
-        fetch('{% url 'app_kiberclub:save_review_from_page' %}', {
-            method: 'POST',
-            body: formData,
-            headers: {
-                'X-CSRFToken': '{{ csrf_token }}'
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.status === 'success') {
-                // Показываем сообщение об успехе
-                messageElement.innerText = data.message;
-                messageElement.style.color = '#4CAF50'; // зеленый цвет для успеха
-                
-                // Очищаем поле ввода
-                document.getElementById('feedbackInput').value = '';
-                
-                // Возвращаем первоначальный текст кнопки
-                button.innerText = 'Отправить';
-                button.disabled = false;
-            } else {
-                // Показываем сообщение об ошибке
-                messageElement.innerText = data.message || 'Произошла ошибка при отправке отзыва';
-                messageElement.style.color = '#f44336'; // красный цвет для ошибки
-                button.innerText = 'Отправить';
-                button.disabled = false;
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            // Показываем сообщение об ошибке в случае проблем с сетью или другими ошибками
-            messageElement.innerText = 'Произошла ошибка при отправке отзыва';
-            messageElement.style.color = '#f44336'; // красный цвет для ошибки
-            button.innerText = 'Отправить';
-            button.disabled = false;
-        });
-    }
+    fetch('{% url 'app_kiberclub: save_review_from_page' %}', {
+      method: 'POST',
+      body: formData,
+      headers: {
+        'X-CSRFToken': '{{ csrf_token }}'
+      }
+    })
+      .then(response => response.json())
+      .then(data => {
+        if (data.status === 'success') {
+          // Показываем сообщение об успехе
+          messageElement.innerText = data.message;
+          messageElement.style.color = '#4CAF50'; // зеленый цвет для успеха
+
+          // Очищаем поле ввода
+          document.getElementById('feedbackInput').value = '';
+
+          // Возвращаем первоначальный текст кнопки
+          button.innerText = 'Отправить';
+          button.disabled = false;
+        } else {
+          // Показываем сообщение об ошибке
+          messageElement.innerText = data.message || 'Произошла ошибка при отправке отзыва';
+          messageElement.style.color = '#f44336'; // красный цвет для ошибки
+          button.innerText = 'Отправить';
+          button.disabled = false;
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        // Показываем сообщение об ошибке в случае проблем с сетью или другими ошибками
+        messageElement.innerText = 'Произошла ошибка при отправке отзыва';
+        messageElement.style.color = '#f44336'; // красный цвет для ошибки
+        button.innerText = 'Отправить';
+        button.disabled = false;
+      });
+  }
 </script>
+
 </html>

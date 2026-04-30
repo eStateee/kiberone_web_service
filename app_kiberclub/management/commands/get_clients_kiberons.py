@@ -10,7 +10,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 class Command(BaseCommand):
-    help = 'Получает баланс киберонов всех клиентов и сохраняет в CSV-файл'
+    help = 'Получает баланс кликоинов всех клиентов и сохраняет в CSV-файл'
 
     def handle(self, *args, **options):
         # Создаем директорию fixtures, если она не существует
@@ -71,11 +71,11 @@ class Command(BaseCommand):
                         user_crm_name_full = " ".join(user_crm_name_splitted).strip()
                         # кибероны из киберклаба
                         kiberons = get_kiberons_count(crm_id, user_crm_name_full, login, password)
-                        self.stdout.write(self.style.SUCCESS(f'Получено {kiberons} киберонов из личного кабинета для {name}'))
+                        self.stdout.write(self.style.SUCCESS(f'Получено {kiberons} кликоинов из личного кабинета для {name}'))
                         
                         # Получаем текущий баланс киберонов из CRM
                         crm_kiberons = get_client_kiberons(branch_id, crm_id)
-                        self.stdout.write(self.style.SUCCESS(f'Текущий баланс киберонов в CRM для {name}: {crm_kiberons}'))
+                        self.stdout.write(self.style.SUCCESS(f'Текущий баланс кликоинов в CRM для {name}: {crm_kiberons}'))
                         
                         if kiberons is not None and crm_kiberons is not None:
                             try:

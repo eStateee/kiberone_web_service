@@ -194,7 +194,7 @@ def check_clients_lessons_before():
 
             if location:
                 message = (
-                    f"🔔 Ваше пробное занятие в КИБЕР-школе уже завтра!\n"
+                    f"🔔 Ваше пробное занятие в KLiK уже завтра!\n"
                     f"Дата: {lesson_date.split('-')[2]}.{lesson_date.split('-')[1]}\n"
                     f"Время: {lesson_time}\n"
                     f"Адрес: {location.name}\n{location.map_url}\n\n"
@@ -237,7 +237,7 @@ def check_clients_lessons_before():
 
                 if next_lesson_date == tomorrow_date:
                     message = (
-                        f"🔔 Ваше первое занятие в КИБЕР-школе уже завтра!\n"
+                        f"🔔 Ваше первое занятие в KLiK уже завтра!\n"
                         f"Дата: {next_lesson_date.split('-')[2]}.{next_lesson_date.split('-')[1]}\n"
                         f"Время: {last_user_lesson.get('time_from').split(' ')[1][:-3]}\n"
                         f"Адрес: {location.name}\n{location.map_url}\n\n"

@@ -1,16 +1,7 @@
 @font-face {
-    font-family: 'pf_beausans_prolight';
-    src: url('/static/fonts/PFBeauSansPro-Light.ttf');
-         url('/static/fonts/PFBeauSansPro-Light.ttf') format('truetype');
-    font-weight: normal;
-    font-style: normal;
-}
-
-
-@font-face {
     font-family: 'franklin_gothic_mediumregular';
-    src: url('/static/fonts/Franklin_Gothic_Medium.ttf');
-         url('/static/fonts/Franklin_Gothic_Medium.ttf') format('truetype');
+    src: url('/static/fonts/manrope-medium.otf');
+         url('/static/fonts/manrope-medium.otf') format('truetype');
     font-weight: normal;
     font-style: normal;
 }
@@ -23,7 +14,7 @@ html {
 }
 
 body {
-    background: #fff;
+    background: #FBFFDC;
     display: flex;
     flex-direction: column;
     align-items: center;
