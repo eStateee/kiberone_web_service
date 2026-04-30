@@ -88,7 +88,7 @@
     button.disabled = true;
     button.innerText = 'Отправка...';
 
-    fetch('{% url 'app_kiberclub: save_review_from_page' %}', {
+    fetch('{% url 'app_kiberclub:save_review_from_page' %}', {
       method: 'POST',
       body: formData,
       headers: {
