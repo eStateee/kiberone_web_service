@@ -1,3 +1,11 @@
+@font-face {
+    font-family: 'pf_beausans_prolight';
+    src: url('/static/fonts/Etude Noire Light.ttf');
+url('/static/fonts/Etude Noire Light.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
 button {
     background-color: #EE6C4D;
     color: #ffffff;
@@ -40,6 +48,7 @@ form {
     display: flex;
     justify-content: center;
     align-items: center;
+    font-family: 'pf_beausans_prolight';
 }
 
 

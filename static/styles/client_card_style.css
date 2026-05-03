@@ -94,8 +94,6 @@ a {
 
 #profileImg {
     width: 45vw;
-    height: 45vw;
-    margin-bottom: -5vw;
 }
 
 
@@ -116,7 +114,7 @@ a {
 #infoWithImage {
     display: flex;
     width: 100%;
-    align-items: end;
+    align-items: center;
     margin-bottom: 5vw;
     justify-content: space-between;
 }
