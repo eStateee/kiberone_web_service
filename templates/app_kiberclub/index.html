@@ -8,15 +8,15 @@
   <title>{{ title }}</title>
   <link href="https://fonts.googleapis.com/css2?family=Franklin+Gothic+Medium&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=PF+Beau+Sans+Pro:wght@300&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="{% static 'styles/start_page_style.css' %}?v=1.0.1">
-  <link rel="stylesheet" href="{% static 'styles/spinner_style.css' %}?v=1.0.1">
+  <link rel="stylesheet" href="{% static 'styles/start_page_style.css' %}?v=1.0.2">
+  <link rel="stylesheet" href="{% static 'styles/spinner_style.css' %}?v=1.0.2">
 </head>
 
 <body>
   <div id="mainDiv">
     <section id="main">
       <h1>Добро пожаловать <br> в KLiKhub!</h1>
-      <img src="{% static 'img/start.png' %}?v=1.0.1" id="startImg" alt="Старт">
+      <img src="{% static 'img/start.png' %}?v=1.0.2" id="startImg" alt="Старт">
       <form action="{% url 'app_kiberclub:open_profile' %}" method="post" id="profileForm">
         {% csrf_token %}
         {% if profiles %}
