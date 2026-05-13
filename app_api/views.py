@@ -21,7 +21,7 @@ from app_api.utils.util_erip import set_pay
 from app_api.utils.util_parse_date import parse_date
 from app_api.utils.user_status_utils import update_bot_user_status
 from app_api.tasks.check_clients_balance_and_notify import send_telegram_document
-from app_kiberclub.models import AppUser, Client, Branch, ClientBonus, EripPaymentHelp, Location, PartnerCategory, PartnerClientBonus, QuestionsAnswers, SalesManager, SocialLink, PartnerCity
+from app_kiberclub.models import AppUser, Client, Branch, ClientBonus, EripPaymentHelp, Location, PartnerCategory, PartnerClientBonus, QuestionsAnswers, SalesManager, SocialLink, PartnerCity, SummerGlobalConfig, SummerCity, SummerFormat
 
 logger = logging.getLogger(__name__)
 
@@ -1145,4 +1145,113 @@ def telegram_callback_handler(request) -> Response:
         return Response(
             {"success": False, "message": f"Внутренняя ошибка сервера: {str(e)}"},
             status=status.HTTP_200_OK,  # Всегда 200 для Telegram, чтобы он не повторял запрос
+        )
+
+
+# ==================== ЛЕТО С KLIK ====================
+
+
+@api_view(["GET"])
+def get_summer_data(request) -> Response:
+    """
+    Получение структуры летних лагерей для бота.
+    Возвращает глобальные настройки, выездной лагерь и список городов с форматами.
+    """
+    try:
+        config = SummerGlobalConfig.objects.first()
+        if not config:
+            return Response(
+                {"success": False, "message": "Настройки 'Лето с KLiK' не найдены."},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+
+        cities = SummerCity.objects.filter(is_active=True).prefetch_related("formats")
+        cities_data = []
+        for city in cities:
+            formats = city.formats.all()
+            formats_data = [
+                {
+                    "id": fmt.id,
+                    "button_name": fmt.button_name,
+                    "text": fmt.text,
+                    "image": fmt.image.url if fmt.image else None,
+                }
+                for fmt in formats
+            ]
+            cities_data.append({
+                "id": city.id,
+                "name": city.name,
+                "formats": formats_data,
+            })
+
+        data = {
+            "is_active": config.is_active,
+            "away_camp": {
+                "text": config.away_camp_text,
+                "image": config.away_camp_image.url if config.away_camp_image else None,
+            },
+            "cities": cities_data,
+        }
+
+        return Response(
+            {"success": True, "data": data},
+            status=status.HTTP_200_OK,
+        )
+    except Exception as e:
+        logger.error(f"Ошибка при получении данных 'Лето с KLiK': {str(e)}")
+        return Response(
+            {"success": False, "message": f"Ошибка сервера: {str(e)}"},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+        )
+
+
+@api_view(["POST"])
+def track_summer_click(request) -> Response:
+    """
+    Атомарный инкремент счётчика кликов для аналитики.
+    Payload: {"entity_type": "main|away|city|format", "entity_id": <int>}
+    Использует F() expression для предотвращения race conditions.
+    """
+    try:
+        entity_type = request.data.get("entity_type")
+        entity_id = request.data.get("entity_id", 0)
+
+        if entity_type not in ("main", "away", "city", "format"):
+            return Response(
+                {"success": False, "message": "Неверный entity_type. Допустимые: main, away, city, format."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        if entity_type == "main":
+            updated = SummerGlobalConfig.objects.update(
+                main_button_clicks=models.F("main_button_clicks") + 1
+            )
+        elif entity_type == "away":
+            updated = SummerGlobalConfig.objects.update(
+                away_camp_clicks=models.F("away_camp_clicks") + 1
+            )
+        elif entity_type == "city":
+            updated = SummerCity.objects.filter(id=entity_id).update(
+                clicks=models.F("clicks") + 1
+            )
+        elif entity_type == "format":
+            updated = SummerFormat.objects.filter(id=entity_id).update(
+                clicks=models.F("clicks") + 1
+            )
+
+        if not updated:
+            return Response(
+                {"success": False, "message": "Объект не найден."},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+
+        return Response(
+            {"success": True},
+            status=status.HTTP_200_OK,
+        )
+    except Exception as e:
+        logger.error(f"Ошибка при трекинге клика: {str(e)}")
+        return Response(
+            {"success": False, "message": f"Ошибка сервера: {str(e)}"},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR,
         )

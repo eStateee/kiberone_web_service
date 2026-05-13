@@ -21,6 +21,7 @@ from app_kiberclub.models import (
     SocialLink,
     Location,
     Manager, BroadcastMessage, RunningLine, PartnerCity,
+    SummerGlobalConfig, SummerCity, SummerFormat,
 )
 
 logger = logging.getLogger(__name__)
@@ -218,3 +219,43 @@ class RunningLineAdmin(admin.ModelAdmin):
         if count == 0:
             return True
         return False
+
+
+# ==================== ЛЕТО С KLIK ====================
+
+
+class SummerFormatInline(admin.TabularInline):
+    """Inline-форматы для редактирования на странице города."""
+    model = SummerFormat
+    extra = 1
+    fields = ["button_name", "text", "image", "order", "clicks"]
+    readonly_fields = ["clicks"]
+
+
+@admin.register(SummerGlobalConfig)
+class SummerGlobalConfigAdmin(admin.ModelAdmin):
+    list_display = ["__str__", "is_active", "main_button_clicks", "away_camp_clicks"]
+    readonly_fields = ["main_button_clicks", "away_camp_clicks"]
+
+    def has_add_permission(self, request):
+        # Singleton: разрешаем создать только одну запись
+        return SummerGlobalConfig.objects.count() == 0
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+
+@admin.register(SummerCity)
+class SummerCityAdmin(admin.ModelAdmin):
+    list_display = ["name", "is_active", "order", "clicks"]
+    list_editable = ["is_active", "order"]
+    readonly_fields = ["clicks"]
+    inlines = [SummerFormatInline]
+
+
+@admin.register(SummerFormat)
+class SummerFormatAdmin(admin.ModelAdmin):
+    list_display = ["button_name", "city", "order", "clicks"]
+    list_filter = ["city"]
+    list_editable = ["order"]
+    readonly_fields = ["clicks"]

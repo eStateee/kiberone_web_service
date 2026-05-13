@@ -23,6 +23,8 @@ from app_api.views import (
     telegram_callback_handler,
     get_partner_cities_view,
     get_partners_filtered_view,
+    get_summer_data,
+    track_summer_click,
 )
 
 app_name = "app_crm_api"
@@ -54,4 +56,7 @@ urlpatterns = [
     path("get_user_tg_links/", get_user_tg_links, name="get_user_tg_links"),
     path("find_client_by_id_view/", find_client_by_id_view, name="find_client_by_id_view"),
     path("telegram_callback/", telegram_callback_handler, name="telegram_callback"),
+    # Лето с KLiK
+    path("summer/data/", get_summer_data, name="get_summer_data"),
+    path("summer/click/", track_summer_click, name="track_summer_click"),
 ]

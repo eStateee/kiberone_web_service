@@ -313,3 +313,65 @@ class RunningLine(models.Model):
 
     def __str__(self):
         return f"Бегущая строка: {'Активна' if self.is_active else 'Неактивна'}"
+
+
+# ==================== ЛЕТО С KLIK ====================
+
+
+class SummerGlobalConfig(models.Model):
+    """
+    Глобальные настройки фичи 'Лето с KLiK' (singleton — одна запись в таблице).
+    """
+
+    is_active = models.BooleanField(default=True, verbose_name="Кнопка активна")
+    main_button_clicks = models.PositiveIntegerField(default=0, verbose_name="Клики на главную кнопку")
+    away_camp_text = models.TextField(verbose_name="Текст выездного лагеря", blank=True, default="")
+    away_camp_image = models.ImageField(upload_to="summer/", blank=True, null=True, verbose_name="Изображение выездного лагеря")
+    away_camp_clicks = models.PositiveIntegerField(default=0, verbose_name="Клики на выездной лагерь")
+
+    class Meta:
+        verbose_name = "Лето с KLiK — Настройки"
+        verbose_name_plural = "Лето с KLiK — Настройки"
+
+    def __str__(self):
+        return "Настройки 'Лето с KLiK'"
+
+
+class SummerCity(models.Model):
+    """
+    Город для летних лагерей.
+    """
+
+    name = models.CharField(max_length=255, verbose_name="Название города")
+    is_active = models.BooleanField(default=True, verbose_name="Активен")
+    order = models.PositiveIntegerField(default=0, verbose_name="Порядок сортировки")
+    clicks = models.PositiveIntegerField(default=0, verbose_name="Клики")
+
+    class Meta:
+        verbose_name = "Лето — Город"
+        verbose_name_plural = "Лето — Города"
+        ordering = ["order", "name"]
+
+    def __str__(self):
+        return self.name
+
+
+class SummerFormat(models.Model):
+    """
+    Формат летнего лагеря в конкретном городе.
+    """
+
+    city = models.ForeignKey(SummerCity, on_delete=models.CASCADE, related_name="formats", verbose_name="Город")
+    button_name = models.CharField(max_length=255, verbose_name="Название кнопки")
+    text = models.TextField(verbose_name="Текст описания", blank=True, default="")
+    image = models.ImageField(upload_to="summer/formats/", blank=True, null=True, verbose_name="Изображение")
+    order = models.PositiveIntegerField(default=0, verbose_name="Порядок сортировки")
+    clicks = models.PositiveIntegerField(default=0, verbose_name="Клики")
+
+    class Meta:
+        verbose_name = "Лето — Формат"
+        verbose_name_plural = "Лето — Форматы"
+        ordering = ["order", "button_name"]
+
+    def __str__(self):
+        return f"{self.button_name} ({self.city.name})"
