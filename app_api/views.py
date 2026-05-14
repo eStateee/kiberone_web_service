@@ -1,4 +1,4 @@
-from django.db.models import QuerySet, Count
+from django.db.models import QuerySet, Count, F
 from django.shortcuts import render
 import logging
 import os
@@ -1224,19 +1224,19 @@ def track_summer_click(request) -> Response:
 
         if entity_type == "main":
             updated = SummerGlobalConfig.objects.update(
-                main_button_clicks=models.F("main_button_clicks") + 1
+                main_button_clicks=F("main_button_clicks") + 1
             )
         elif entity_type == "away":
             updated = SummerGlobalConfig.objects.update(
-                away_camp_clicks=models.F("away_camp_clicks") + 1
+                away_camp_clicks=F("away_camp_clicks") + 1
             )
         elif entity_type == "city":
             updated = SummerCity.objects.filter(id=entity_id).update(
-                clicks=models.F("clicks") + 1
+                clicks=F("clicks") + 1
             )
         elif entity_type == "format":
             updated = SummerFormat.objects.filter(id=entity_id).update(
-                clicks=models.F("clicks") + 1
+                clicks=F("clicks") + 1
             )
 
         if not updated:
