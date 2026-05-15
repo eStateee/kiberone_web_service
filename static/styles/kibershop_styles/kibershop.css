@@ -178,7 +178,7 @@ header {
 .productName {
     font-family: 'franklin_gothic_mediumregular', sans-serif;
     font-size: clamp(1rem, 3.5vw, 1.5rem);
-    color: white;
+    color: #000000;
     border-bottom: 2px solid white;
     padding-bottom: 0.5vw;
     margin-bottom: 1vw;

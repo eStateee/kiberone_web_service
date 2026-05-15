@@ -85,7 +85,7 @@ button {
 .productName {
     font-family: 'franklin_gothic_mediumregular';
     font-size: 3.5vw;
-    color: white;
+    color: #000000;
     /* margin: 0; */
     padding-bottom: 0.5vw;
     margin-bottom: -4.5vw;
