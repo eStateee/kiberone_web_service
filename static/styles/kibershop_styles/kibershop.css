@@ -1,16 +1,17 @@
 @font-face {
     font-family: 'pf_beausans_prolight';
-    src: url('/static/fonts/PFBeauSansPro-Light.ttf');
-         url('/static/fonts/PFBeauSansPro-Light.ttf') format('truetype');
+    src: url('/static/fonts/Etude Noire Light.ttf');
+url('/static/fonts/Etude Noire Light.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
 }
 
 
+
 @font-face {
     font-family: 'franklin_gothic_mediumregular';
-    src: url('/static/fonts/Franklin_Gothic_Medium.ttf');
-         url('/static/fonts/Franklin_Gothic_Medium.ttf') format('truetype');
+    src: url('/static/fonts/manrope-medium.otf');
+url('/static/fonts/manrope-medium.otf') format('truetype');
     font-weight: normal;
     font-style: normal;
 }
@@ -52,7 +53,7 @@ header {
     top: 0;
     left: 0;
     width: 100%;
-    background-color: #71D7D9;
+    background-color: #5D2435;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -80,7 +81,7 @@ header {
 }
 
 #toCatalog:hover {
-    color: #FFCD26;
+    color: #EE6C4D;
 }
 
 .right_section {
@@ -148,7 +149,7 @@ header {
 }
 
 .productCard {
-    background-color: #05b8be65;
+    background-color: #E2F07E;
     border-radius: 10px;
     padding: 2vw;
     display: flex;
@@ -186,12 +187,12 @@ header {
 .productPrice {
     font-family: 'franklin_gothic_mediumregular', sans-serif;
     font-size: clamp(1rem, 4vw, 1.5rem);
-    color: #92241F;
+    color: #5D2435;
     margin-top: 1vw;
 }
 
 .cartButton {
-    background-color: #05B9BE;
+    background-color: #FFBEE4;
     border-radius: 50%;
     width: 60px;
     height: 60px;
@@ -266,7 +267,7 @@ footer {
     left: 20px;
     font-size: 14px;
     color: white;
-    background-color: #92241F;
+    background-color: #5D2435;
     border-radius: 50%;
     width: 24px;
     height: 24px;
@@ -284,7 +285,7 @@ footer {
     width: 60px;
     height: 60px;
     border-radius: 50%;
-    background-color: #FFCD26;
+    background-color: #01524C;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 

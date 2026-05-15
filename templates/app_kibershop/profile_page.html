@@ -3,8 +3,8 @@
 
 
 {% block head %}
-    <link rel="stylesheet" type="text/css" href="{% static 'styles/kibershop_styles/order_style.css' %}">
-    <link rel="stylesheet" type="text/css" href="{% static 'styles/kibershop_styles/profile_style.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'styles/kibershop_styles/order_style.css' %}?v=1.0.1">
+<link rel="stylesheet" type="text/css" href="{% static 'styles/kibershop_styles/profile_style.css' %}?v=1.0.1">
 {% endblock %}
 
 {% block header %}
@@ -12,33 +12,34 @@
 {% endblock %}
 
 {% block content %}
+
 <body>
-    {% include 'app_kibershop/notifications.html' %}
-    <section id="titleSection">
-        <p id="titleText">Мои покупки</p>
-    </section>
-    <section id="orderProducts">
-        {% for order_item in order_items %}
-        	<div class="orderProductCard">
-            <img src="{{ order_item.product.image.url }}" class="orderProductImg">
-            <!-- <b><p class="cartProductName">Ноутбук</p></b> -->
-            <section class="orderSection">
-                <p class="orderProductPrice"><b>{{ order_item.quantity }} шт.</b></p>
-                <p class="orderProductPrice"><b>{{ order_item.product.price }}К</b></p>
-                <p class="orderProductStatus"><b>Заказано</b></p>
-            </section>
-        </div>
-        {% endfor %}
-    </section>
+  {% include 'app_kibershop/notifications.html' %}
+  <section id="titleSection">
+    <p id="titleText">Мои покупки</p>
+  </section>
+  <section id="orderProducts">
+    {% for order_item in order_items %}
+    <div class="orderProductCard">
+      <img src="{{ order_item.product.image.url }}" class="orderProductImg">
+      <!-- <b><p class="cartProductName">Ноутбук</p></b> -->
+      <section class="orderSection">
+        <p class="orderProductPrice"><b>{{ order_item.quantity }} шт.</b></p>
+        <p class="orderProductPrice"><b>{{ order_item.product.price }}К</b></p>
+        <p class="orderProductStatus"><b>Заказано</b></p>
+      </section>
+    </div>
+    {% endfor %}
+  </section>
 
 
-    <section id="fullOrderInfoSection">
-        <div id="fullOrderInfo">
-            <p id="orderProductsCount">Товары: <b>{{ total_quantity }} шт.</b></p>
-            <p id="orderKiberonsCount">Итого: <b>{{ total_sum }} К</b></p>
-        </div>
-        <p id="orderHint">*Для изменения заказа свяжитесь с Вашим менеджером</p>
-    </section>
+  <section id="fullOrderInfoSection">
+    <div id="fullOrderInfo">
+      <p id="orderProductsCount">Товары: <b>{{ total_quantity }} шт.</b></p>
+      <p id="orderKiberonsCount">Итого: <b>{{ total_sum }} К</b></p>
+    </div>
+    <p id="orderHint">*Для изменения заказа свяжитесь с Вашим менеджером</p>
+  </section>
 </body>
 {% endblock %}
 

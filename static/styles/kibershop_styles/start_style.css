@@ -1,16 +1,17 @@
 @font-face {
     font-family: 'pf_beausans_prolight';
-    src: url('/static/fonts/PFBeauSansPro-Light.ttf');
-         url('/static/fonts/PFBeauSansPro-Light.ttf') format('truetype');
+    src: url('/static/fonts/Etude Noire Light.ttf');
+url('/static/fonts/Etude Noire Light.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
 }
 
 
+
 @font-face {
     font-family: 'franklin_gothic_mediumregular';
-    src: url('/static/fonts/Franklin_Gothic_Medium.ttf');
-         url('/static/fonts/Franklin_Gothic_Medium.ttf') format('truetype');
+    src: url('/static/fonts/manrope-medium.otf');
+url('/static/fonts/manrope-medium.otf') format('truetype');
     font-weight: normal;
     font-style: normal;
 }
@@ -47,7 +48,7 @@ button {
 }
 
 a {
-    background-color: #F6C90E;
+    background-color: #EE6C4D;
     color: #ffffff;
     border-radius: 15vw;
     padding: 3.3vw;

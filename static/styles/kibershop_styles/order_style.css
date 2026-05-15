@@ -8,7 +8,7 @@
     padding: 1vw;
     padding-top: 3vw;
     padding-bottom: 3vw;
-    background-color: #ffca1c4a;
+    background-color: #FBFFDC;
     border-radius: 1vw;
     height: 15vw;
     margin-top: 8vw;
@@ -27,7 +27,7 @@
     font-size: 4.5vw;
     margin-bottom: 0;
     margin-top: 0;
-    color: #92241F;
+    color: #5D2435;
 }
 
 #errorText {
@@ -35,7 +35,7 @@
     margin-bottom: 0;
     margin-top: 0;
     margin-left: 5vw;
-    color: #92241F;
+    color: #5D2435;
 }
 
 .orderSection {
@@ -45,7 +45,7 @@
 }
 
 .orderButton {
-    background-color: #92241F;
+    background-color: #5D2435;
     color: white;
     font-size: 4vw;
     font-family: 'franklin_gothic_mediumregular';
@@ -87,7 +87,7 @@
 }
 
 #fullOrderButton {
-    background-color: #92241F;
+    background-color: #5D2435;
     color: white;
     font-size: 4vw;
     font-family: 'franklin_gothic_mediumregular';

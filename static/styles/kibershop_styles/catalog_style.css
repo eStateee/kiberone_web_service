@@ -1,16 +1,17 @@
 @font-face {
     font-family: 'pf_beausans_prolight';
-    src: url('/static/fonts/PFBeauSansPro-Light.ttf');
-         url('/static/fonts/PFBeauSansPro-Light.ttf') format('truetype');
+    src: url('/static/fonts/Etude Noire Light.ttf');
+url('/static/fonts/Etude Noire Light.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
 }
 
 
+
 @font-face {
     font-family: 'franklin_gothic_mediumregular';
-    src: url('/static/fonts/Franklin_Gothic_Medium.ttf');
-         url('/static/fonts/Franklin_Gothic_Medium.ttf') format('truetype');
+    src: url('/static/fonts/manrope-medium.otf');
+url('/static/fonts/manrope-medium.otf') format('truetype');
     font-weight: normal;
     font-style: normal;
 }
@@ -28,7 +29,7 @@ h1 {
 }
 
 span {
-    background: linear-gradient(146deg, #05b8be7d 0%, #1186957b 50%, #1c556e72 100%);
+    background: linear-gradient(146deg, #d0ada4 0%, #e6917c 50%, #EE6C4D 100%);
     border-radius: 5vw 0px 0px 5vw;
     padding: 2vw;
     padding-left: 5vw;
@@ -61,7 +62,7 @@ button {
 }
 
 .productCard {
-    background-color: #05b8be65;
+    background-color: #E2F07E;
     width: 45vw;
     height: 45vw;
     border-radius: 5vw;
@@ -100,14 +101,14 @@ button {
 .productPrice {
     font-family: 'franklin_gothic_mediumregular';
     font-size: 4vw;
-    color: #92241F;
+    color: #5D2435;
     margin-left: 2vw;
     padding-top: 0.5vw;
 }
 
 
 .cartButton {
-    background-color: #05B9BE;
+    background-color: #FFBEE4;
     border-radius: 50vw;
     border: none;
     display: flex;

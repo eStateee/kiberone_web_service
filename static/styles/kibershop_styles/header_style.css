@@ -1,3 +1,20 @@
+@font-face {
+    font-family: 'pf_beausans_prolight';
+    src: url('/static/fonts/Etude Noire Light.ttf');
+url('/static/fonts/Etude Noire Light.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+
+
+@font-face {
+    font-family: 'franklin_gothic_mediumregular';
+    src: url('/static/fonts/manrope-medium.otf');
+url('/static/fonts/manrope-medium.otf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
 body {
     margin: 0;
 }
@@ -42,7 +59,7 @@ button {
 
 #headerLine{
     position: fixed;
-    background-color: #71D7D9;
+    background-color: #5D2435;
     width: 100%;
     display: flex;
     align-items: center;
