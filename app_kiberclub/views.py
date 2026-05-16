@@ -85,6 +85,10 @@ def open_profile(request):
         client = get_object_or_404(Client, crm_id=client_id)
         logger.debug(f"Найден клиент: {client.crm_id}, имя: {client.name}")
 
+        if not client.is_study:
+            logger.warning(f"Клиент {client.crm_id} не имеет статуса обучающегося (is_study=False). Доступ запрещен.")
+            return redirect("app_kiberclub:error_page")
+
         context = {
             "title": "KIBERone - Профиль",
             "client": {
@@ -107,69 +111,72 @@ def open_profile(request):
         logger.debug(f"Портфолио для клиента {client.name}: {portfolio_link}")
         context.update({"portfolio_link": portfolio_link})
 
-        branch_id = int(client.branch.branch_id)
+        branch_id = int(client.branch.branch_id) if client.branch else 0
         logger.debug(f"Определён branch_id: {branch_id}")
 
-        lessons_data = get_client_lessons(client_id, branch_id, lesson_status=1, lesson_type=2)
-        logger.debug(f"Получены данные об уроках для клиента {client_id}: {lessons_data}")
+        # Получаем данные, не зависящие от расписания
+        client_resume = get_client_resume(client.crm_id)
+        logger.debug(f"Резюме клиента: {client_resume}")
 
-        if lessons_data and int(lessons_data.get("total", 0)) > 0:
-            lesson = lessons_data.get("items", [])[-1]
-            room_id = lesson.get("room_id")
-            subject_id = lesson.get("subject_id")
-            logger.debug(f"Последний урок: room_id={room_id}, subject_id={subject_id}")
+        kiberons = get_client_kiberons(branch_id, client.crm_id) if branch_id else "0"
+        logger.debug(f"Кибероны клиента: {kiberons}")
 
-            lesson_info = get_client_lesson_name(branch_id, subject_id)
-            logger.debug(f"Информация о названии урока: {lesson_info}")
+        # Инициализируем переменные для расписания заглушками
+        lesson_name = "Занятия отсутствуют"
+        location_name = "Локация не назначена"
+        room_id = ""
 
-            if lesson_info.get("total") > 0:
-                all_lesson_items = lesson_info.get("items")
-                lesson_name = ""
-                for item in all_lesson_items:
-                    if item.get("id") == subject_id:
-                        lesson_name = item.get("name", "")
-                        logger.debug(f"Название урока найдено: {lesson_name}")
+        # Пытаемся получить данные об уроках
+        if branch_id:
+            lessons_data = get_client_lessons(client_id, branch_id, lesson_status=1, lesson_type=2)
+            logger.debug(f"Получены данные об уроках для клиента {client_id}: {lessons_data}")
 
-            if room_id:
-                logger.debug(f"Установлен room_id в сессию: {room_id}")
-                request.session["room_id"] = room_id
+            if lessons_data and int(lessons_data.get("total", 0)) > 0:
+                lesson = lessons_data.get("items", [])[-1]
+                lesson_room_id = lesson.get("room_id")
+                subject_id = lesson.get("subject_id")
+                logger.debug(f"Последний урок: room_id={lesson_room_id}, subject_id={subject_id}")
 
-                location = Location.objects.filter(location_crm_id=room_id).first()
+                lesson_info = get_client_lesson_name(branch_id, subject_id)
+                logger.debug(f"Информация о названии урока: {lesson_info}")
 
-                client_resume = get_client_resume(client.crm_id)
-                logger.debug(f"Резюме клиента: {client_resume}")
+                if lesson_info and lesson_info.get("total", 0) > 0:
+                    all_lesson_items = lesson_info.get("items", [])
+                    for item in all_lesson_items:
+                        if item.get("id") == subject_id:
+                            lesson_name = item.get("name", "")
+                            logger.debug(f"Название урока найдено: {lesson_name}")
+                            break
 
-                context["client"].update(
-                    {
-                        "location_name": location.name,
-                        "lesson_name": lesson_name if lesson_name else "",
-                        "resume": (client_resume if client_resume else "Появится позже"),
-                        "room_id": room_id,
-                    }
-                )
+                if lesson_room_id:
+                    room_id = lesson_room_id
+                    logger.debug(f"Установлен room_id в сессию: {room_id}")
+                    request.session["room_id"] = room_id
 
-                kiberons = get_client_kiberons(branch_id, client.crm_id)
+                    location = Location.objects.filter(location_crm_id=room_id).first()
+                    if location:
+                        location_name = location.name
 
-                context["client"].update(
-                    {
-                        "kiberons_count": kiberons if kiberons else "0",
-                    }
-                )
+        # Формируем итоговый контекст
+        context["client"].update(
+            {
+                "location_name": location_name,
+                "lesson_name": lesson_name if lesson_name else "Занятия отсутствуют",
+                "resume": (client_resume if client_resume else "Появится позже"),
+                "room_id": room_id,
+                "kiberons_count": kiberons if kiberons else "0",
+            }
+        )
 
-                # Add running line to context
-                running_line = RunningLine.objects.first()
-                if running_line and running_line.is_active:
-                    context["running_line_text"] = running_line.text
-                else:
-                    context["running_line_text"] = None
-
-                return render(request, "app_kiberclub/client_card.html", context)
-            else:
-                logger.warning(f"room_id не найден для урока клиента {client_id}")
-                return redirect("app_kiberclub:error_page")
+        # Add running line to context
+        running_line = RunningLine.objects.first()
+        if running_line and running_line.is_active:
+            context["running_line_text"] = running_line.text
         else:
-            logger.warning(f"У клиента {client_id} нет активных уроков")
-            return redirect("app_kiberclub:error_page")
+            context["running_line_text"] = None
+
+        return render(request, "app_kiberclub/client_card.html", context)
+
     except Exception as e:
         logger.exception(f"Произошла ошибка при выполнении open_profile: {e}")
         return redirect("app_kiberclub:error_page")
