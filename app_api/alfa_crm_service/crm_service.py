@@ -322,8 +322,9 @@ def get_curr_tariff(user_crm_id, branch_id, curr_date):
         tariff_begin_date = datetime.strptime(tariff.get("b_date"), "%d.%m.%Y")
         if tariff_end_date.date() >= curr_date >= tariff_begin_date.date():
             price = float(get_tariff_price(branch_id, tariff.get("tariff_id")))
+            lessons_count = float(get_tariff_lessons_count(branch_id, tariff.get("tariff_id")))
             discount = float(get_curr_discount(branch_id, user_crm_id, curr_date))
-            tariff.update({"price": price * (1 - discount / 100)})
+            tariff.update({"price": price * (1 - discount / 100), "lessons_count":lessons_count})
             return tariff
 
 
@@ -340,6 +341,24 @@ def get_tariff_price(branch_id, tariff_id):
         for tariff in tariff_objects_items:
             if tariff.get("id") == tariff_id:
                 return tariff.get("price")
+        page += 1
+        data = {"page": page}
+        tariff_objects_items = send_request_to_crm(url, data, None).get("items")
+    return 0
+
+def get_tariff_lessons_count(branch_id, tariff_id):
+    url = f"https://{CRM_HOSTNAME}/v2api/{branch_id}/tariff/index"
+    page = 0
+    data = {"page": 0}
+    tariff_objects = send_request_to_crm(url, data, None)
+    tariff_objects_items = tariff_objects.get("items")
+    last_page = 1
+    if tariff_objects.get("count") is not None and int(tariff_objects.get("count")) != 0:
+        last_page = int(tariff_objects.get("total", 0)) // int(tariff_objects.get("count", 1))
+    while page <= last_page:
+        for tariff in tariff_objects_items:
+            if tariff.get("id") == tariff_id:
+                return tariff.get("lessons_count")
         page += 1
         data = {"page": page}
         tariff_objects_items = send_request_to_crm(url, data, None).get("items")

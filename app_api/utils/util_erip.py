@@ -104,7 +104,7 @@ def get_curr_month_lessons(user_data, curr_date):
 
 def get_lesson_price(user_crm_id, branch_id, curr_date):
     tariff = get_curr_tariff(user_crm_id, branch_id, curr_date)
-    price = tariff.get("price") / 4
+    price = tariff.get("price") / tariff.get('lessons_count')
     return price
 
 
