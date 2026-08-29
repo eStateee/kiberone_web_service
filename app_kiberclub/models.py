@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.validators import MinValueValidator
 
 
 class Branch(models.Model):
@@ -313,3 +314,23 @@ class RunningLine(models.Model):
 
     def __str__(self):
         return f"Бегущая строка: {'Активна' if self.is_active else 'Неактивна'}"
+
+
+class BirthdayMessageStatus(models.Model):
+
+    client = models.ForeignKey(
+        Client,
+        on_delete=models.CASCADE,
+        verbose_name="Связь с ребенком"
+    )
+    sent = models.DateField(auto_now_add=True) # дата отправки сообщения
+    year_of_birthday_message = models.PositiveIntegerField(validators=[MinValueValidator(1984),])
+
+    def __str__(self):
+        return f"Сообщение было отправлено {self.sent.strftime('%d.%m.%Y')} ребенку {self.client.name}"
+
+    class Meta:
+        constraints = [models.UniqueConstraint(fields=("client", "year_of_birthday_message"), name="unique_year_birthday_message"), ]
+        verbose_name = "Поздравление с днем рождения"
+        verbose_name_plural = "Поздравления с днем рождения"
+

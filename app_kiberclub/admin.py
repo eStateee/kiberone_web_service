@@ -21,6 +21,7 @@ from app_kiberclub.models import (
     SocialLink,
     Location,
     Manager, BroadcastMessage, RunningLine, PartnerCity,
+    BirthdayMessageStatus,
 )
 
 logger = logging.getLogger(__name__)
@@ -218,3 +219,9 @@ class RunningLineAdmin(admin.ModelAdmin):
         if count == 0:
             return True
         return False
+
+@admin.register(BirthdayMessageStatus)
+class BirthdayMessageStatusAdmin(admin.ModelAdmin):
+    list_display = ['__str__', 'sent', 'year_of_birthday_message']
+    list_filter = ['sent', 'year_of_birthday_message']
+    list_select_related = ["client"] # избегаем проблему n+1
