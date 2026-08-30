@@ -1,4 +1,4 @@
-from app_kiberclub.models import Client, BirthdayMessageStatus
+from app_kiberclub.models import Client
 from django.utils import timezone
 
 
@@ -39,6 +39,7 @@ def get_children_w_coming_birthday(window_days=7, telegram_id=None, is_exact_mat
                     "crm_id": client.crm_id,
                     "telegram_id": client.user.telegram_id,
                     "next_birthday_year": coming_birthday.year,
+                    "branch_id": client.branch.branch_id
                 }
 
             if is_client_obj_need:

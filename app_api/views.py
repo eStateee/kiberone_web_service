@@ -19,6 +19,7 @@ from rest_framework.response import Response
 
 from app_api.utils.util_erip import set_pay
 from app_api.utils.util_parse_date import parse_date
+from app_api.utils.util_birthday import get_children_w_coming_birthday
 from app_api.utils.user_status_utils import update_bot_user_status
 from app_api.tasks.check_clients_balance_and_notify import send_telegram_document
 from app_kiberclub.models import AppUser, Client, Branch, ClientBonus, EripPaymentHelp, Location, PartnerCategory, PartnerClientBonus, QuestionsAnswers, SalesManager, SocialLink, PartnerCity
@@ -1145,4 +1146,44 @@ def telegram_callback_handler(request) -> Response:
         return Response(
             {"success": False, "message": f"Внутренняя ошибка сервера: {str(e)}"},
             status=status.HTTP_200_OK,  # Всегда 200 для Telegram, чтобы он не повторял запрос
+        )
+
+
+@api_view(["GET"])
+def get_clients_w_coming_birthday(request):
+    """
+    Получение списка клиентов для указанного пользователя.
+    """
+
+    try:
+
+        telegram_id = request.query_params.get("telegram_id")
+        window_days = int(request.query_params.get("window_days" , 30))
+
+        if not telegram_id or not window_days:
+            return Response(
+                {"success": False , "message": f"Необходимо telegram_id"} ,
+                status=400 ,
+            )
+
+        data = get_children_w_coming_birthday(window_days, telegram_id)
+
+        for i in range(len(data)):
+
+            try:
+                data[i]['balance'] = find_client_by_id(data[i]['branch_id'], data[i]['crm_id']).get("balance")
+            except AttributeError:
+                data[i]['balance'] = None
+
+            for remove_key in ['branch_id', 'next_birthday_year', 'telegram_id', 'crm_id']:
+                data[i].pop(remove_key) # удаляем служебную информацию
+
+        return Response(
+            {"success": True, "data": data},
+            status=200,
+        )
+    except Exception as e:
+        return Response(
+            {"success": False, "message": f"Ошибка сервера: {str(e)}"},
+            status=500,
         )

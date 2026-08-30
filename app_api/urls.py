@@ -23,6 +23,7 @@ from app_api.views import (
     telegram_callback_handler,
     get_partner_cities_view,
     get_partners_filtered_view,
+    get_clients_w_coming_birthday
 )
 
 app_name = "app_crm_api"
@@ -54,4 +55,5 @@ urlpatterns = [
     path("get_user_tg_links/", get_user_tg_links, name="get_user_tg_links"),
     path("find_client_by_id_view/", find_client_by_id_view, name="find_client_by_id_view"),
     path("telegram_callback/", telegram_callback_handler, name="telegram_callback"),
+    path("upcoming_birthdays/" , get_clients_w_coming_birthday , name="upcoming_birthdays") ,
 ]
