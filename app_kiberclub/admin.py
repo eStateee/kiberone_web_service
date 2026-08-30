@@ -222,6 +222,6 @@ class RunningLineAdmin(admin.ModelAdmin):
 
 @admin.register(BirthdayMessageStatus)
 class BirthdayMessageStatusAdmin(admin.ModelAdmin):
-    list_display = ['__str__', 'sent', 'year_of_birthday_message']
-    list_filter = ['sent', 'year_of_birthday_message']
+    list_display = ['__str__', 'sent', 'year_of_future_birthday_message']
+    list_filter = ['sent', 'year_of_future_birthday_message']
     list_select_related = ["client"] # избегаем проблему n+1

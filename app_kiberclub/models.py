@@ -321,16 +321,17 @@ class BirthdayMessageStatus(models.Model):
     client = models.ForeignKey(
         Client,
         on_delete=models.CASCADE,
-        verbose_name="Связь с ребенком"
+        verbose_name="Связь с ребенком",
+        related_name="birthday_messages"
     )
     sent = models.DateField(auto_now_add=True) # дата отправки сообщения
-    year_of_birthday_message = models.PositiveIntegerField(validators=[MinValueValidator(1984),])
+    year_of_future_birthday_message = models.PositiveIntegerField(validators=[MinValueValidator(1984),])
 
     def __str__(self):
         return f"Сообщение было отправлено {self.sent.strftime('%d.%m.%Y')} ребенку {self.client.name}"
 
     class Meta:
-        constraints = [models.UniqueConstraint(fields=("client", "year_of_birthday_message"), name="unique_year_birthday_message"), ]
+        constraints = [models.UniqueConstraint(fields=("client", "year_of_future_birthday_message"), name="unique_year_future_birthday_message"), ]
         verbose_name = "Поздравление с днем рождения"
         verbose_name_plural = "Поздравления с днем рождения"
 
