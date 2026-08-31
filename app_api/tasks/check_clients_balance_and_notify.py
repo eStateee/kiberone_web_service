@@ -33,6 +33,23 @@ def send_telegram_message(chat_id, text):
     pass
 
 
+def send_telegram_message_with_result(chat_id, text) -> bool:
+    token = getattr(settings, "TELEGRAM_BOT_TOKEN", None)
+    if not token:
+        return False
+
+    url = f"https://api.telegram.org/bot{token}/sendMessage"
+    payload = {"chat_id": chat_id, "text": text, "parse_mode": "HTML"}
+    try:
+        response = requests.post(url, json=payload)
+        if not response.ok:
+            return False
+    except Exception as e:
+        return False
+
+    logger.info(f"[Telegram] Отправлено сообщение для {chat_id}: {text}")
+    return True
+
 def send_telegram_message_with_inline_keyboard(chat_id, text, inline_keyboard):
     """
     Отправляет сообщение в Telegram с инлайн клавиатурой
