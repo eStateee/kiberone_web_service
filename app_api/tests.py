@@ -239,6 +239,25 @@ class BirthdayReminderTaskTests(TestCase):
         self.assertIn("обратитесь к менеджеру", send.call_args[0][1])
 
     @patch("app_api.tasks.birthday_tg_message.send_telegram_message_with_result", return_value=True)
+    @patch("app_api.tasks.birthday_tg_message.find_client_by_id", return_value={"balance": "150.00"})
+    def test_счётчики_различают_отправку_и_пропуск(self, _crm, _send):
+        with fixed_today():
+            first = send_birthday_tg_message()
+            second = send_birthday_tg_message()
+        self.assertIn("Отправлено: 1", first)
+        self.assertIn("Пропущено (уже отправляли): 0", first)
+        self.assertIn("Отправлено: 0", second)
+        self.assertIn("Пропущено (уже отправляли): 1", second)
+
+    @patch("app_api.tasks.birthday_tg_message.send_telegram_message_with_result", return_value=False)
+    @patch("app_api.tasks.birthday_tg_message.find_client_by_id", return_value={"balance": "1"})
+    def test_неудачная_отправка_попадает_в_счётчик_ошибок(self, _crm, _send):
+        with fixed_today():
+            result = send_birthday_tg_message()
+        self.assertIn("Отправлено: 0", result)
+        self.assertIn("Ошибок: 1", result)
+
+    @patch("app_api.tasks.birthday_tg_message.send_telegram_message_with_result", return_value=True)
     @patch("app_api.tasks.birthday_tg_message.find_client_by_id", return_value={"balance": "1"})
     def test_ребёнок_вне_окна_не_попадает_в_рассылку(self, _crm, send):
         self.child.dob = date(2014, 10, 20)
