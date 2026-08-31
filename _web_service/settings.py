@@ -253,6 +253,9 @@ LOGGING = {
             "maxBytes": 1024 * 1024,  # 1 Мегабайт
             "backupCount": 5,
             "formatter": "verbose",
+            # Без явной кодировки берётся системная (cp1251 на Windows),
+            # и любой эмодзи в сообщении роняет запись в журнал
+            "encoding": "utf-8",
         },
     },
     "loggers": {

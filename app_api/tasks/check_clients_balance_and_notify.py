@@ -41,13 +41,16 @@ def send_telegram_message_with_result(chat_id, text) -> bool:
     url = f"https://api.telegram.org/bot{token}/sendMessage"
     payload = {"chat_id": chat_id, "text": text, "parse_mode": "HTML"}
     try:
-        response = requests.post(url, json=payload)
+        response = requests.post(url, json=payload, timeout=10)
         if not response.ok:
+            logger.error(f"[Telegram] Отказ при отправке для {chat_id}: {response.text}")
             return False
     except Exception as e:
+        logger.error(f"[Telegram] Не удалось отправить сообщение для {chat_id}: {e}")
         return False
 
-    logger.info(f"[Telegram] Отправлено сообщение для {chat_id}: {text}")
+    # Сам текст в журнал не пишем: в нём эмодзи, имя ребёнка и баланс семьи
+    logger.info(f"[Telegram] Сообщение отправлено для {chat_id}, длина {len(text)} символов")
     return True
 
 def send_telegram_message_with_inline_keyboard(chat_id, text, inline_keyboard):
