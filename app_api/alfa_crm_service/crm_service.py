@@ -94,7 +94,9 @@ def login_to_alfa_crm():
 
     try:
         logger.info("Отправка POST-запроса для авторизации...")
-        response = requests.post(url, headers=BASE_HEADERS, json=data)
+        # Без таймаута запрос висит бесконечно, если CRM не отвечает,
+        # и вместе с ним зависает вызвавшая его страница или задача
+        response = requests.post(url, headers=BASE_HEADERS, json=data, timeout=10)
         logger.debug(
             f"Получен ответ от сервера: статус {response.status_code}, тело: {response.text}"
         )

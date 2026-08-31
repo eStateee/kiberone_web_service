@@ -78,8 +78,17 @@ class Command(BaseCommand):
             defaults={"username": "birthday_testdata", "status": "2"},
         )
 
+        # Кнопка «Дни рождения» показывается только клиентам (статус «2»).
+        # У существующего пользователя defaults не применяются, поэтому
+        # статус выставляем явно, запомнив прежний для отката.
+        original_status = user.status
+        if user.status != "2":
+            user.status = "2"
+            user.save(update_fields=["status"])
+
         snapshot = {
             "telegram_id": str(telegram_id),
+            "user_status": original_status,
             "user_id": user.pk,
             "user_created": user_created,
             "target_date": target.isoformat(),
@@ -109,6 +118,8 @@ class Command(BaseCommand):
 
         self.stdout.write("")
         self.stdout.write(f"Родитель: telegram_id={telegram_id} ({'создан' if user_created else 'уже был в базе'})")
+        if original_status != "2":
+            self.stdout.write(f"Статус родителя изменён с «{original_status}» на «2» — иначе бот не покажет кнопку")
         self.stdout.write(f"День рождения у всех: {target.strftime('%d.%m.%Y')}, это через {options['days']} дн.")
         self.stdout.write(f"Снимок сохранён: {BACKUP_FILE.name}")
         self.stdout.write("")
@@ -154,6 +165,12 @@ class Command(BaseCommand):
             client.save(update_fields=["dob", "user"])
             restored += 1
 
+        # Возвращаем прежний статус родителя, если он существовал до проверки.
+        status_restored = None
+        if not snapshot["user_created"] and snapshot.get("user_status") is not None:
+            AppUser.objects.filter(pk=snapshot["user_id"]).update(status=snapshot["user_status"])
+            status_restored = snapshot["user_status"]
+
         # И только теперь тестовый родитель, если его создавали мы.
         user_removed = False
         if snapshot["user_created"]:
@@ -165,3 +182,5 @@ class Command(BaseCommand):
         self.stdout.write(f"  детей возвращено в исходное состояние: {restored}")
         self.stdout.write(f"  удалено отметок об отправке: {removed_statuses}")
         self.stdout.write(f"  тестовый родитель удалён: {'да' if user_removed else 'нет, он был в базе до проверки'}")
+        if status_restored is not None:
+            self.stdout.write(f"  статус родителя возвращён: «{status_restored}»")
