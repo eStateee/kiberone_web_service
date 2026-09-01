@@ -140,9 +140,12 @@ def send_broadcast_task(self, broadcast_id):
                 # Временная ошибка — не помечаем обработанным, повторим при возобновлении
                 fail += 1
 
-            if broadcast.image and not broadcast.photo_file_id:
+            if broadcast.image and not broadcast.photo_file_id and result == "error":
                 # Пока не получен file_id, каждый получатель = повторная загрузка файла.
-                # Если загрузка стабильно не удаётся — останавливаемся, а не молотим часами.
+                # Считаем только настоящие сбои загрузки — невалидные чаты (result ==
+                # "invalid_chat") не говорят о проблеме с самим изображением: если среди
+                # первых получателей окажется много мёртвых telegram_id, останавливать
+                # рассылку из-за этого не нужно.
                 upload_attempts += 1
                 if upload_attempts >= MAX_UPLOAD_ATTEMPTS:
                     broadcast.status = BroadcastMessage.STATUS_INTERRUPTED

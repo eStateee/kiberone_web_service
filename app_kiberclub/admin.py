@@ -168,7 +168,7 @@ class ManagerAdmin(admin.ModelAdmin):
 class BroadcastMessageAdmin(admin.ModelAdmin):
     list_display = ('id', 'status_filter', 'status', 'progress', 'task_status')
     list_filter = ('status',)
-    exclude = ('task_id', 'processed_ids', 'photo_file_id')
+    exclude = ('task_id', 'processed_ids', 'photo_file_id', 'total', 'sent_count', 'failed_count')
     readonly_fields = (
         'status', 'progress', 'task_status', 'started_at', 'finished_at', 'last_error',
     )
