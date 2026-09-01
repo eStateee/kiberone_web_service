@@ -270,10 +270,49 @@ class SocialLink(models.Model):
 
 
 class BroadcastMessage(models.Model):
+    STATUS_PENDING = "pending"
+    STATUS_RUNNING = "running"
+    STATUS_INTERRUPTED = "interrupted"
+    STATUS_DONE = "done"
+
+    BROADCAST_STATUS = [
+        (STATUS_PENDING, "Не запущена"),
+        (STATUS_RUNNING, "Отправляется"),
+        (STATUS_INTERRUPTED, "Прервана (можно продолжить)"),
+        (STATUS_DONE, "Завершена"),
+    ]
+
     message_text = models.TextField(verbose_name="Текст сообщения")
     image = models.ImageField(upload_to="broadcast_images/", blank=True, null=True, verbose_name="Изображение")
     status_filter = models.CharField(max_length=5, choices=AppUser.CLIENT_STATUS, blank=True, null=True, verbose_name="Фильтр по статусу (оставьте пустым для всех)")
     task_id = models.CharField(max_length=255, blank=True, null=True, verbose_name="ID задачи Celery")
+
+    status = models.CharField(
+        max_length=20,
+        choices=BROADCAST_STATUS,
+        default=STATUS_PENDING,
+        verbose_name="Состояние рассылки",
+    )
+    total = models.PositiveIntegerField(default=0, verbose_name="Всего получателей")
+    sent_count = models.PositiveIntegerField(default=0, verbose_name="Отправлено")
+    failed_count = models.PositiveIntegerField(default=0, verbose_name="Ошибок")
+    processed_ids = models.JSONField(
+        default=list,
+        blank=True,
+        verbose_name="ID обработанных получателей",
+        help_text="Служебное поле: этим пользователям рассылка уже отправлена, "
+                  "при повторном запуске они будут пропущены.",
+    )
+    photo_file_id = models.CharField(
+        max_length=255,
+        blank=True,
+        default="",
+        verbose_name="file_id изображения в Telegram",
+        help_text="Служебное поле: позволяет не загружать картинку заново для каждого получателя.",
+    )
+    started_at = models.DateTimeField(blank=True, null=True, verbose_name="Начало отправки")
+    finished_at = models.DateTimeField(blank=True, null=True, verbose_name="Окончание отправки")
+    last_error = models.TextField(blank=True, default="", verbose_name="Последняя ошибка")
 
     class Meta:
         verbose_name = "Рассылка"

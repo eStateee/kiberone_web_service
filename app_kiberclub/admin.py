@@ -166,40 +166,93 @@ class ManagerAdmin(admin.ModelAdmin):
 
 @admin.register(BroadcastMessage)
 class BroadcastMessageAdmin(admin.ModelAdmin):
-    list_display = ('id', 'status_filter', 'task_id', 'task_status')
-    exclude = ('task_id',)
-    readonly_fields = ('task_status',)
+    list_display = ('id', 'status_filter', 'status', 'progress', 'task_status')
+    list_filter = ('status',)
+    exclude = ('task_id', 'processed_ids', 'photo_file_id')
+    readonly_fields = (
+        'status', 'progress', 'task_status', 'started_at', 'finished_at', 'last_error',
+    )
+    actions = ('start_or_resume_broadcast',)
+
+    def progress(self, obj):
+        return (
+            f"{len(obj.processed_ids or [])} из {obj.total} "
+            f"(успешно: {obj.sent_count}, ошибок: {obj.failed_count})"
+        )
+
+    progress.short_description = "Прогресс"
 
     def task_status(self, obj):
+        """
+        Состояние celery-задачи. Основной источник правды — поля модели,
+        AsyncResult нужен только чтобы показать сбой самой задачи.
+        """
         if not obj.task_id:
             return "Не запущена"
 
         task = AsyncResult(obj.task_id)
 
-        if task.state == 'PROGRESS':
-            progress = task.info.get('current', 0)
-            total = task.info.get('total', 0)
-            return f"В процессе ({progress}/{total})"
-        elif task.state == 'SUCCESS':
-            return f"Завершено (Успешно: {task.result.get('success', 0)}, Ошибки: {task.result.get('fail', 0)})"
-        elif task.state == 'FAILURE':
-            return "Ошибка при выполнении"
-        else:
-            return task.state
+        if task.state == 'PROGRESS' and isinstance(task.info, dict):
+            return f"В процессе ({task.info.get('current', 0)}/{task.info.get('total', 0)})"
+        if task.state == 'FAILURE':
+            return "Задача упала с ошибкой (см. «Последняя ошибка» и логи воркера)"
+        return task.state
 
     task_status.short_description = "Статус задачи"
 
     def save_model(self, request, obj, form, change):
-        obj.sent_by = request.user
+        message_changed = (
+            change and form.changed_data
+            and bool({'message_text', 'image'} & set(form.changed_data))
+        )
+
+        if message_changed:
+            # Текст/картинку поменяли — это новое сообщение, прогресс прошлой
+            # отправки больше не действителен.
+            obj.processed_ids = []
+            obj.photo_file_id = ""
+            obj.sent_count = 0
+            obj.failed_count = 0
+            obj.started_at = None
+            obj.finished_at = None
+            obj.last_error = ""
+            obj.status = BroadcastMessage.STATUS_PENDING
 
         super().save_model(request, obj, form, change)
 
-        # Запускаем задачу Celery
-        task = send_broadcast_task.delay(obj.id)
-        obj.task_id = task.id
-        super().save_model(request, obj, form, change)
+        if change:
+            # Редактирование существующей рассылки не должно рассылать повторно.
+            messages.info(
+                request,
+                "Изменения сохранены. Рассылка не запущена: выберите её в списке и "
+                "примените действие «Запустить / продолжить рассылку»."
+            )
+            return
 
-        messages.info(request, f"Рассылка запущена как фоновая задача (ID: {task.id})")
+        self._launch(request, obj)
+
+    def start_or_resume_broadcast(self, request, queryset):
+        for broadcast in queryset:
+            if broadcast.status == BroadcastMessage.STATUS_RUNNING:
+                messages.warning(
+                    request, f"Рассылка #{broadcast.id} уже отправляется — пропускаю."
+                )
+                continue
+            self._launch(request, broadcast)
+
+    start_or_resume_broadcast.short_description = "Запустить / продолжить рассылку"
+
+    @staticmethod
+    def _launch(request, broadcast):
+        task = send_broadcast_task.delay(broadcast.id)
+        BroadcastMessage.objects.filter(pk=broadcast.pk).update(task_id=task.id)
+
+        already_done = len(broadcast.processed_ids or [])
+        suffix = f" Пропустим {already_done} уже обработанных получателей." if already_done else ""
+        messages.info(
+            request,
+            f"Рассылка #{broadcast.id} запущена как фоновая задача (ID: {task.id}).{suffix}"
+        )
 
 
 admin.site.register(GiftLink)
