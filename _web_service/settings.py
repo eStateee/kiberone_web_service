@@ -22,14 +22,11 @@ FRONTEND_PROD_URL = "https://klik-telegrambot.of.by"
 ALLOWED_HOSTS = [
     "klik-telegrambot.of.by",
     "www.klik-telegrambot.of.by",
-    "93.85.88.72",
+    "95.130.84.105",
+    "kiber-resume.of.by",
     "localhost",
     "127.0.0.1",
     "0.0.0.0",
-    "http://kiber-resume.of.by",
-    "https://kiber-resume.of.by",
-    "http://93.85.88.72",
-    "https://93.85.88.72",
 ]
 
 # ======================
@@ -81,8 +78,8 @@ else:
         "http://0.0.0.0:8000",
         "http://kiber-resume.of.by",
         "https://kiber-resume.of.by",
-        "http://93.85.88.72",
-        "https://93.85.88.72",
+        "http://95.130.84.105",
+        "https://95.130.84.105",
     ]
 
 # ======================
