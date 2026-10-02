@@ -4,6 +4,7 @@ from .models import GiftLink
 import requests
 from django.conf import settings
 from django.contrib import admin, messages
+from django.db import transaction
 from .models import BroadcastMessage, AppUser
 from .tasks import send_broadcast_task
 from celery.result import AsyncResult
@@ -244,14 +245,20 @@ class BroadcastMessageAdmin(admin.ModelAdmin):
 
     @staticmethod
     def _launch(request, broadcast):
-        task = send_broadcast_task.delay(broadcast.id)
-        BroadcastMessage.objects.filter(pk=broadcast.pk).update(task_id=task.id)
+        def enqueue():
+            task = send_broadcast_task.delay(broadcast.id)
+            BroadcastMessage.objects.filter(pk=broadcast.pk).update(task_id=task.id)
+
+        # Админка сохраняет объект внутри транзакции. Если поставить задачу в очередь
+        # сразу, воркер может не найти ещё не закоммиченную рассылку (DoesNotExist).
+        # Вне транзакции (действие в списке) on_commit выполняется немедленно.
+        transaction.on_commit(enqueue)
 
         already_done = len(broadcast.processed_ids or [])
         suffix = f" Пропустим {already_done} уже обработанных получателей." if already_done else ""
         messages.info(
             request,
-            f"Рассылка #{broadcast.id} запущена как фоновая задача (ID: {task.id}).{suffix}"
+            f"Рассылка #{broadcast.id} поставлена в очередь на отправку.{suffix}"
         )
 
 
