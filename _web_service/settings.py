@@ -13,6 +13,9 @@ DEBUG = os.getenv("DEBUG") == "True"
 
 TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN_TEST") if DEBUG else os.getenv("TELEGRAM_BOT_TOKEN")
 
+# Новая платформа резюме (klik_resume_backend): резюме и отзывы родителей
+KLIK_PLATFORM_API_URL = os.getenv("KLIK_PLATFORM_API_URL", "https://klik-platform.of.by").rstrip("/")
+
 # ======================
 # HOSTS & DOMAINS
 # ======================

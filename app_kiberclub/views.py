@@ -5,6 +5,7 @@ import gspread
 import re
 import requests
 from bs4 import BeautifulSoup
+from django.conf import settings
 from django.http import JsonResponse, HttpRequest, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from oauth2client.service_account import ServiceAccountCredentials
@@ -188,17 +189,20 @@ def error_page_view(request):
 
 def get_client_resume(child_id: str) -> str:
     """
-    Получение резюме по API
+    Получение последнего одобренного (is_verified) резюме ребёнка с платформы KLiK
     """
     try:
-        url = f"https://kiber-resume.of.by/api/resumes/latest-verified/"
+        url = f"{settings.KLIK_PLATFORM_API_URL}/api/resumes/latest-verified/"
         params = {"student_crm_id": child_id}
-        response: HttpResponse = requests.get(url=url, params=params, timeout=5)
+        response = requests.get(url=url, params=params, timeout=5)
 
         if response.status_code == 200:
             data = response.json()
             resume_content: str = data.get("content", "")
             return resume_content if resume_content else "Появится позже"
+        elif response.status_code == 404:
+            logger.debug(f"Одобренного резюме для клиента {child_id} на платформе пока нет")
+            return "Появится позже"
         else:
             logger.warning(f"Получен статус {response.status_code} при запросе резюме для клиента {child_id}")
             return "Появится позже"
@@ -206,8 +210,8 @@ def get_client_resume(child_id: str) -> str:
     except requests.exceptions.RequestException as e:
         logger.exception(f"Ошибка сети при запросе резюме для клиента {child_id}: {e}")
         return "Появится позже"
-    except KeyError as e:
-        logger.exception(f"Отсутствует ожидаемое поле в ответе API для клиента {child_id}: {e}")
+    except ValueError as e:
+        logger.exception(f"Некорректный JSON в ответе платформы для клиента {child_id}: {e}")
         return "Появится позже"
     except Exception as e:
         logger.exception(f"Неожиданная ошибка при запросе резюме для клиента {child_id}: {e}")
@@ -230,14 +234,20 @@ def save_review_from_page(request):
             logger.warning(f"Отсутствуют необходимые параметры: crm_id={bool(crm_id)}, feedback={bool(feedback)}")
             return JsonResponse({"status": "error", "message": "Отсутствуют необходимые параметры"}, status=400)
 
-        url = "https://kiber-resume.of.by/api/reviews/"
+        url = f"{settings.KLIK_PLATFORM_API_URL}/api/reviews/"
         data = {"student_crm_id": crm_id, "content": feedback}
 
-        response: HttpResponse = requests.post(url=url, data=data, timeout=5)
+        response = requests.post(url=url, data=data, timeout=5)
 
         if response.status_code == 200 or response.status_code == 201:
             logger.info(f"Отзыв успешно сохранен для клиента {crm_id}")
             return JsonResponse({"status": "success", "message": "Отзыв успешно сохранен"})
+        elif response.status_code == 404:
+            logger.warning(f"Клиент {crm_id} не найден на платформе при сохранении отзыва")
+            return JsonResponse({"status": "error", "message": "Не удалось сохранить отзыв: ученик ещё не добавлен на платформу"}, status=400)
+        elif response.status_code == 429:
+            logger.warning(f"Превышен лимит отправки отзывов на платформе (клиент {crm_id})")
+            return JsonResponse({"status": "error", "message": "Слишком много отзывов, попробуйте позже"}, status=429)
         else:
             logger.warning(f"Получен статус {response.status_code} при сохранении отзыва для клиента {crm_id}")
             return JsonResponse({"status": "error", "message": "Ошибка при сохранении отзыва"}, status=400)
